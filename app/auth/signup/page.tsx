@@ -32,19 +32,7 @@ export default function SignupPage() {
 
       if (error) throw error
 
-      // プロフィールテーブルに追加
-      if (data.user) {
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert({
-            id: data.user.id,
-            email: data.user.email!,
-            full_name: fullName,
-          })
-
-        if (profileError) throw profileError
-      }
-
+      // プロフィールは自動的に作成されます（database trigger）
       router.push('/')
       router.refresh()
     } catch (error: any) {

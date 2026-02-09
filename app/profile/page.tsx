@@ -135,7 +135,7 @@ export default function ProfilePage() {
           </div>
           <div className="bg-white shadow rounded-lg p-6 text-center">
             <p className="text-3xl font-bold text-green-600">
-              {new Date(profile?.created_at).getFullYear()}
+              {profile?.created_at ? new Date(profile.created_at).getFullYear() : new Date().getFullYear()}
             </p>
             <p className="text-gray-600 mt-2">登録年</p>
           </div>
