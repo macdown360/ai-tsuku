@@ -35,7 +35,7 @@ export default function Navbar() {
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center space-x-8">
             <Link href="/" className="flex items-center space-x-2">
-              <span className="text-2xl font-bold text-blue-600">🛠️ ToolPark</span>
+              <span className="text-2xl font-bold text-blue-600">🛠️ Web Application Sharing Economy</span>
             </Link>
             <div className="hidden md:flex space-x-4">
               <Link

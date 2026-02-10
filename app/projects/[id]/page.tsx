@@ -134,7 +134,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     if (!project) return
 
     const shareUrl = encodeURIComponent(window.location.href)
-    const shareText = encodeURIComponent(`${project.title} - ToolPark`)
+    const shareText = encodeURIComponent(`${project.title} - Web Application Sharing Economy`)
 
     let url = ''
     switch (platform) {
