@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Web Application Sharing Economy - WEBサイト・アプリ投稿プラットフォーム",
+  title: "Appli Farm - WEBサイト・アプリ投稿プラットフォーム",
   description: "誰でも簡単に自分が作ったWEBサイトやWEBアプリを登録して公開できるプラットフォーム",
 };
 

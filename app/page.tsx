@@ -53,7 +53,7 @@ export default async function Home() {
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
-            Web Application Sharing Economyの特徴
+            Appli Farmの特徴
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center p-6">
@@ -137,7 +137,7 @@ export default async function Home() {
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-400 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p>&copy; 2026 Web Application Sharing Economy. All rights reserved.</p>
+          <p>&copy; 2026 Appli Farm. All rights reserved.</p>
         </div>
       </footer>
     </div>
