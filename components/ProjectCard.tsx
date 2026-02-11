@@ -8,7 +8,7 @@ interface ProjectCardProps {
     description: string
     url: string
     image_url: string | null
-    category: string | null
+    categories: string[]
     tags: string[]
     likes_count: number
     created_at: string
@@ -41,10 +41,22 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
         <div className="p-4 flex flex-col flex-grow">
           {/* カテゴリタグ */}
-          {project.category && (
-            <span className="inline-block px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full w-fit mb-2">
-              {project.category}
-            </span>
+          {project.categories && project.categories.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-2">
+              {project.categories.slice(0, 2).map((cat) => (
+                <span
+                  key={cat}
+                  className="inline-block px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full w-fit"
+                >
+                  {cat}
+                </span>
+              ))}
+              {project.categories.length > 2 && (
+                <span className="inline-block px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full w-fit">
+                  +{project.categories.length - 2}
+                </span>
+              )}
+            </div>
           )}
 
           {/* タイトル */}

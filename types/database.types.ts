@@ -49,7 +49,7 @@ export interface Database {
           description: string
           url: string
           image_url: string | null
-          category: string | null
+          categories: string[]
           tags: string[]
           likes_count: number
           created_at: string
@@ -62,7 +62,7 @@ export interface Database {
           description: string
           url: string
           image_url?: string | null
-          category?: string | null
+          categories?: string[]
           tags?: string[]
           likes_count?: number
           created_at?: string
@@ -75,7 +75,7 @@ export interface Database {
           description?: string
           url?: string
           image_url?: string | null
-          category?: string | null
+          categories?: string[]
           tags?: string[]
           likes_count?: number
           created_at?: string

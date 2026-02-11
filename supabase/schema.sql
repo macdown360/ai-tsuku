@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS projects (
     description TEXT NOT NULL,
     url TEXT NOT NULL,
     image_url TEXT,
-    category TEXT,
+    categories TEXT[] DEFAULT '{}',
     tags TEXT[] DEFAULT '{}',
     likes_count INTEGER DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS likes (
 
 -- Create indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_projects_user_id ON projects(user_id);
-CREATE INDEX IF NOT EXISTS idx_projects_category ON projects(category);
+CREATE INDEX IF NOT EXISTS idx_projects_categories ON projects USING GIN (categories);
 CREATE INDEX IF NOT EXISTS idx_projects_created_at ON projects(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_likes_user_id ON likes(user_id);
 CREATE INDEX IF NOT EXISTS idx_likes_project_id ON likes(project_id);

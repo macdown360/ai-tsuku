@@ -15,7 +15,7 @@ interface Project {
   description: string
   url: string
   image_url: string | null
-  category: string | null
+  categories: string[]
   tags: string[]
   likes_count: number
   created_at: string
@@ -194,10 +194,17 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
           <div className="p-8">
             {/* カテゴリ */}
-            {project.category && (
-              <span className="inline-block px-3 py-1 text-sm font-semibold text-green-700 bg-green-100 rounded-full mb-4">
-                {project.category}
-              </span>
+            {project.categories && project.categories.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {project.categories.map((cat) => (
+                  <span
+                    key={cat}
+                    className="inline-block px-3 py-1 text-sm font-semibold text-green-700 bg-green-100 rounded-full"
+                  >
+                    {cat}
+                  </span>
+                ))}
+              </div>
             )}
 
             {/* タイトル */}

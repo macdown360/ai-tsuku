@@ -41,22 +41,37 @@
 6. 「**Public bucket**」✅ にチェック
 7. 「**Create bucket**」をクリック
 
-#### ステップ 2: セキュリティ設定
+#### ステップ 2: RLS ポリシー設定（重要！）
 
 バケット作成後、セキュリティポリシーを設定します：
 
-1. 作成した `project-images` バケットを選択
+1. 作成した `project-images` バケットをクリック
 2. 「**Policies**」タブをクリック
-3. 「**New Policy**」をクリック
-4. 「**For authenticated users**」を選択
-5. ポリシー作成ウィザードで「**CREATE**」を選択
-6. デフォルト値のまま「**Review**」→「**Create policy**」をクリック
+3. 左側の「**New Policy**」をクリック
+4. テンプレートから「**CREATE**」を選択（または「For authenticated users」→「CREATE」）
+5. 表示されたウィザードで：
+   - Operation: `INSERT` が選択されていることを確認
+   - Target roles: `authenticated` が選択されていることを確認
+   - USING expression: ポリシー定義欄は **空のままか、デフォルトのまま**
+6. 「**Review policy**」をクリック
+7. 「**Create policy**」をクリック
 
-✅ これでバケットのセットアップが完了しました
+8. 次に **SELECT ポリシー**も作成します：
+   - 「**New Policy**」をクリック
+   - テンプレートから「**SELECT**」を選択
+   - Operation: `SELECT`、Target roles: `public`（または `anon`）
+   - USING expression: 空のまままたはデフォルト
+   - 「**Review policy**」→「**Create policy**」
+
+✅ これでポリシー設定が完了しました
 
 **確認方法:**
-- Supabaseダッシュボード → Storage → `project-images` バケットが表示されている
-- ブラウザで `https://your-project.supabase.co/storage/v1/object/public/project-images/` にアクセスして、404ページが表示されれば正常です
+- Storage → `project-images` → Policies で2つのポリシー（INSERT と SELECT）が表示されている
+- ブラウザの開発者ツールにエラーが出ていないことを確認してから、再度画像アップロードを試してください
+
+**もし設定後もエラーが出る場合:**
+- 開発者ツール（F12）でコンソールエラーをコピーして確認
+- または、画像なしでプロジェクトを投稿してみてください（オプション機能のため機能します）
 
 ### 4. 環境変数の設定
 

@@ -25,7 +25,7 @@ export default async function ProjectsPage({
 
   // カテゴリフィルター
   if (params.category) {
-    query = query.eq('category', params.category)
+    query = query.contains('categories', [params.category])
   }
 
   // 検索フィルター
@@ -38,11 +38,14 @@ export default async function ProjectsPage({
   // ユニークなカテゴリを取得
   const { data: categoriesData } = await supabase
     .from('projects')
-    .select('category')
-    .not('category', 'is', null)
+    .select('categories')
 
   const categories = Array.from(
-    new Set(categoriesData?.map((p) => p.category).filter(Boolean))
+    new Set(
+      (categoriesData ?? [])
+        .flatMap((p) => p.categories || [])
+        .filter(Boolean)
+    )
   )
 
   return (

@@ -7,14 +7,70 @@ import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 import Navbar from '@/components/Navbar'
 
-const CATEGORIES = [
-  'Webアプリ',
-  'モバイルアプリ',
-  'デスクトップアプリ',
-  'Webサイト',
-  'ツール・ユーティリティ',
-  'ゲーム',
-  'その他',
+const CATEGORY_GROUPS = [
+  {
+    label: 'コア業務',
+    options: [
+      '営業・販売管理',
+      '顧客管理（CRM）',
+      'プロジェクト管理',
+      'タスク・ToDo管理',
+      'スケジュール・予定管理',
+      '在庫管理',
+      '経理・会計',
+      '人事・勤怠管理',
+      '請求書・見積書作成',
+    ],
+  },
+  {
+    label: 'マーケティング・コミュニケーション',
+    options: [
+      'マーケティング支援',
+      'SNS管理',
+      'メール配信',
+      'アンケート・フォーム作成',
+      'チャット・メッセージング',
+    ],
+  },
+  {
+    label: 'コンテンツ制作',
+    options: [
+      '文書作成・編集',
+      'デザイン・画像編集',
+      '動画編集',
+      'プレゼンテーション作成',
+      'Webサイト作成',
+    ],
+  },
+  {
+    label: 'データ・分析',
+    options: [
+      'データ分析・可視化',
+      'レポート作成',
+      'ダッシュボード',
+      '計算・シミュレーション',
+      'ファイル変換・処理',
+    ],
+  },
+  {
+    label: '学習・教育',
+    options: [
+      'eラーニング',
+      'クイズ・テスト作成',
+      '学習管理',
+      'ドキュメント共有',
+    ],
+  },
+  {
+    label: 'その他',
+    options: [
+      '自動化・効率化ツール',
+      'API連携ツール',
+      'AI活用ツール',
+      'セキュリティ・認証',
+      'その他ユーティリティ',
+    ],
+  },
 ]
 
 export default function NewProjectPage() {
@@ -24,7 +80,7 @@ export default function NewProjectPage() {
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [isDragActive, setIsDragActive] = useState(false)
-  const [category, setCategory] = useState('')
+  const [categories, setCategories] = useState<string[]>([])
   const [tags, setTags] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -86,12 +142,24 @@ export default function NewProjectPage() {
     }
   }
 
+  const toggleCategory = (value: string) => {
+    setCategories((prev) =>
+      prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]
+    )
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
     setLoading(true)
 
     try {
+      if (categories.length === 0) {
+        setError('カテゴリを1つ以上選択してください')
+        setLoading(false)
+        return
+      }
+
       const { data: { user } } = await supabase.auth.getUser()
       
       if (!user) {
@@ -146,6 +214,16 @@ export default function NewProjectPage() {
                 '「project-images」という名前のバケットを作成してください。'
               )
             }
+
+            // RLS ポリシーエラーの場合
+            if (uploadError.message.includes('row-level security policy')) {
+              throw new Error(
+                'Supabase Storage のセキュリティポリシーが正しく設定されていません。\n\n' +
+                'SETUP.md の「3. Supabase Storage のセットアップ」の\n' +
+                'ステップ2「RLS ポリシー設定」を確認して、\n' +
+                'CREATE ポリシーと SELECT ポリシーを作成してください。'
+              )
+            }
             
             throw new Error(`画像アップロード失敗: ${uploadError.message || '不明なエラー'}`)
           }
@@ -175,7 +253,7 @@ export default function NewProjectPage() {
           description,
           url,
           image_url: uploadedImageUrl || null,
-          category: category || null,
+          categories,
           tags: tagsArray,
         })
         .select()
@@ -262,7 +340,7 @@ export default function NewProjectPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                画像（オプション）
+                サムネイル画像（オプション）
               </label>
               
               {/* 画像プレビュー */}
@@ -325,22 +403,37 @@ export default function NewProjectPage() {
             </div>
 
             <div>
-              <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
-                カテゴリ（オプション）
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                カテゴリ <span className="text-red-500">*</span>
               </label>
-              <select
-                id="category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
-              >
-                <option value="">選択してください</option>
-                {CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
+              <div className="space-y-5">
+                {CATEGORY_GROUPS.map((group) => (
+                  <div key={group.label} className="space-y-2">
+                    <p className="text-sm font-semibold text-gray-700">
+                      {group.label}
+                    </p>
+                    <div className="grid sm:grid-cols-2 gap-2">
+                      {group.options.map((option) => (
+                        <label
+                          key={option}
+                          className="flex items-center space-x-2 rounded-md border border-gray-200 bg-gray-50 px-3 py-2 hover:border-green-400 hover:bg-green-50"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={categories.includes(option)}
+                            onChange={() => toggleCategory(option)}
+                            className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                          />
+                          <span className="text-sm text-gray-700">{option}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
                 ))}
-              </select>
+              </div>
+              <p className="mt-2 text-sm text-gray-500">
+                複数選択が可能です
+              </p>
             </div>
 
             <div>
