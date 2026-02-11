@@ -126,25 +126,30 @@ export default function NewProjectPage() {
 
       // 画像をアップロード
       if (imageFile) {
-        const fileExt = imageFile.name.split('.').pop()
-        const fileName = `${user.id}-${Date.now()}.${fileExt}`
-        const filePath = `projects/${fileName}`
+        try {
+          const fileExt = imageFile.name.split('.').pop()
+          const fileName = `${user.id}-${Date.now()}.${fileExt}`
+          const filePath = `projects/${fileName}`
 
-        const { error: uploadError } = await supabase.storage
-          .from('project-images')
-          .upload(filePath, imageFile, { upsert: false })
+          const { error: uploadError, data } = await supabase.storage
+            .from('project-images')
+            .upload(filePath, imageFile, { upsert: false })
 
-        if (uploadError) {
-          console.error('Upload error:', uploadError)
-          throw new Error('画像のアップロードに失敗しました')
+          if (uploadError) {
+            console.error('Upload error details:', uploadError)
+            throw new Error(`画像アップロード失敗: ${uploadError.message || '不明なエラー'}`)
+          }
+
+          // 公開URLを取得
+          const { data: { publicUrl } } = supabase.storage
+            .from('project-images')
+            .getPublicUrl(filePath)
+
+          uploadedImageUrl = publicUrl
+        } catch (uploadException: any) {
+          console.error('Upload exception:', uploadException)
+          throw new Error(uploadException.message || '画像のアップロードに失敗しました')
         }
-
-        // 公開URLを取得
-        const { data: { publicUrl } } = supabase.storage
-          .from('project-images')
-          .getPublicUrl(filePath)
-
-        uploadedImageUrl = publicUrl
       }
 
       const tagsArray = tags
