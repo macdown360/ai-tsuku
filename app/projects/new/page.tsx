@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 import Navbar from '@/components/Navbar'
 
@@ -20,13 +21,70 @@ export default function NewProjectPage() {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [url, setUrl] = useState('')
-  const [imageUrl, setImageUrl] = useState('')
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [isDragActive, setIsDragActive] = useState(false)
   const [category, setCategory] = useState('')
   const [tags, setTags] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
   const supabase = createClient()
+
+  const handleFileChange = (file: File | null) => {
+    if (!file) return
+
+    // ファイルサイズをチェック（10MB以下）
+    if (file.size > 10 * 1024 * 1024) {
+      setError('画像ファイルは10MB以下にしてください')
+      return
+    }
+
+    // ファイルタイプをチェック
+    if (!file.type.startsWith('image/')) {
+      setError('画像ファイルを選択してください')
+      return
+    }
+
+    setImageFile(file)
+    setError(null)
+
+    // プレビューを作成
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      setImagePreview(e.target?.result as string)
+    }
+    reader.readAsDataURL(file)
+  }
+
+  const handleDrag = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (e.type === 'dragenter' || e.type === 'dragover') {
+      setIsDragActive(true)
+    } else if (e.type === 'dragleave') {
+      setIsDragActive(false)
+    }
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragActive(false)
+
+    const files = e.dataTransfer.files
+    if (files && files.length > 0) {
+      handleFileChange(files[0])
+    }
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (files && files.length > 0) {
+      handleFileChange(files[0])
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -64,6 +122,31 @@ export default function NewProjectPage() {
         }
       }
 
+      let uploadedImageUrl: string | null = null
+
+      // 画像をアップロード
+      if (imageFile) {
+        const fileExt = imageFile.name.split('.').pop()
+        const fileName = `${user.id}-${Date.now()}.${fileExt}`
+        const filePath = `projects/${fileName}`
+
+        const { error: uploadError } = await supabase.storage
+          .from('project-images')
+          .upload(filePath, imageFile, { upsert: false })
+
+        if (uploadError) {
+          console.error('Upload error:', uploadError)
+          throw new Error('画像のアップロードに失敗しました')
+        }
+
+        // 公開URLを取得
+        const { data: { publicUrl } } = supabase.storage
+          .from('project-images')
+          .getPublicUrl(filePath)
+
+        uploadedImageUrl = publicUrl
+      }
+
       const tagsArray = tags
         .split(',')
         .map(tag => tag.trim())
@@ -76,7 +159,7 @@ export default function NewProjectPage() {
           title,
           description,
           url,
-          image_url: imageUrl || null,
+          image_url: uploadedImageUrl || null,
           category: category || null,
           tags: tagsArray,
         })
@@ -163,20 +246,67 @@ export default function NewProjectPage() {
             </div>
 
             <div>
-              <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-700 mb-2">
-                画像URL（オプション）
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                画像（オプション）
               </label>
-              <input
-                type="url"
-                id="imageUrl"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
-                placeholder="https://example.com/image.png"
-              />
-              <p className="mt-1 text-sm text-gray-500">
-                スクリーンショットやサムネイル画像のURLを入力してください
-              </p>
+              
+              {/* 画像プレビュー */}
+              {imagePreview && (
+                <div className="mb-4 relative w-full h-48 rounded-md overflow-hidden bg-gray-100">
+                  <Image
+                    src={imagePreview}
+                    alt="Preview"
+                    fill
+                    className="object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setImageFile(null)
+                      setImagePreview(null)
+                      if (fileInputRef.current) {
+                        fileInputRef.current.value = ''
+                      }
+                    }}
+                    className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 text-sm font-medium"
+                  >
+                    削除
+                  </button>
+                </div>
+              )}
+
+              {/* ドラッグアンドドロップエリア */}
+              <div
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
+                onDrop={handleDrop}
+                className={`relative border-2 border-dashed rounded-md p-8 text-center cursor-pointer transition-colors ${
+                  isDragActive
+                    ? 'border-green-500 bg-green-50'
+                    : 'border-gray-300 bg-gray-50 hover:border-green-500 hover:bg-green-50'
+                }`}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleInputChange}
+                  className="hidden"
+                  aria-label="画像ファイルを選択"
+                />
+                <div className="text-4xl mb-2">🌱</div>
+                <p className="text-gray-700 font-medium mb-1">
+                  ファイルをドラッグ&ドロップ
+                </p>
+                <p className="text-gray-500 text-sm mb-3">
+                  またはクリックして選択してください
+                </p>
+                <p className="text-gray-400 text-xs">
+                  対応形式: JPG, PNG, GIF, WebP（最大10MB）
+                </p>
+              </div>
             </div>
 
             <div>

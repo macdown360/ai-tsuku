@@ -27,7 +27,19 @@
 > ❌ `'/workspaces/tool-park/supabase/schema.sql'` とファイルパスを入力しないでください  
 > ✅ ファイルの中身（SQLコード）をコピー&ペーストしてください
 
-### 3. 環境変数の設定
+### 3. Supabase Storage のセットアップ
+
+画像アップロード機能を使用するために、Storageバケットを作成する必要があります。
+
+1. Supabaseダッシュボードの左サイドバーから「**Storage**」を選択
+2. 「**New bucket**」をクリック
+3. バケット名に `project-images` と入力
+4. 「Permissions」で「**Public**」を選択（画像を公開URLで表示するため）
+5. 「**Create bucket**」をクリック
+
+✅ これでプロジェクト画像のアップロード機能が使用できます
+
+### 4. 環境変数の設定
 
 1. Supabaseダッシュボードの「Settings」→「API」を開く
 2. 以下の情報をコピー:
@@ -40,7 +52,7 @@ NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 ```
 
-### 4. 開発サーバーの起動
+### 5. 開発サーバーの起動
 
 ```bash
 npm run dev
@@ -52,6 +64,7 @@ npm run dev
 
 - [ ] Supabaseプロジェクトを作成
 - [ ] データベーススキーマを実行
+- [ ] Supabase Storageバケット（project-images）を作成
 - [ ] `.env.local` に認証情報を設定
 - [ ] `npm install` を実行（初回のみ）
 - [ ] `npm run dev` で開発サーバーを起動
