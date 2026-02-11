@@ -9,6 +9,7 @@ export default function SignupPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [fullName, setFullName] = useState('')
+  const [agreedToTerms, setAgreedToTerms] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -17,6 +18,12 @@ export default function SignupPage() {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+
+    if (!agreedToTerms) {
+      setError('利用規約と個人情報保護方針に同意する必要があります')
+      return
+    }
+
     setLoading(true)
 
     try {
@@ -139,10 +146,36 @@ export default function SignupPage() {
               </div>
             </div>
 
+            <div className="flex items-start">
+              <div className="flex items-center h-5">
+                <input
+                  id="agree-terms"
+                  name="agree-terms"
+                  type="checkbox"
+                  required
+                  checked={agreedToTerms}
+                  onChange={(e) => setAgreedToTerms(e.target.checked)}
+                  className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded cursor-pointer"
+                />
+              </div>
+              <div className="ml-3 text-sm">
+                <label htmlFor="agree-terms" className="font-medium text-gray-700 cursor-pointer">
+                  <Link href="/terms" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:text-green-500">
+                    利用規約
+                  </Link>
+                  と
+                  <Link href="/privacy" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:text-green-500">
+                    個人情報保護方針
+                  </Link>
+                  に同意します
+                </label>
+              </div>
+            </div>
+
             <div>
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || !agreedToTerms}
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? '登録中...' : '新規登録'}
