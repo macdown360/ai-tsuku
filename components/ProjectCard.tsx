@@ -25,7 +25,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
     <Link href={`/projects/${project.id}`}>
       <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden cursor-pointer h-full flex flex-col">
         {/* プロジェクト画像 */}
-        <div className="relative h-48 bg-gray-200">
+        <div className="relative h-32 md:h-48 bg-gray-200">
           {project.image_url ? (
             <Image
               src={project.image_url}
@@ -34,13 +34,13 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               className="object-cover"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-400 text-4xl bg-green-50">
+            <div className="w-full h-full flex items-center justify-center text-gray-400 text-3xl md:text-4xl bg-green-50">
               🌱
             </div>
           )}
         </div>
 
-        <div className="p-4 flex flex-col flex-grow">
+        <div className="p-3 md:p-4 flex flex-col flex-grow">
           {/* カテゴリタグ */}
           {project.categories && project.categories.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-2">
@@ -61,12 +61,12 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           )}
 
           {/* タイトル */}
-          <h3 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">
+          <h3 className="text-base md:text-xl font-semibold text-gray-900 mb-2 line-clamp-2">
             {project.title}
           </h3>
 
           {/* 説明 */}
-          <p className="text-gray-600 text-sm mb-3 line-clamp-3 flex-grow">
+          <p className="text-gray-600 text-xs md:text-sm mb-3 line-clamp-3 flex-grow">
             {project.description}
           </p>
 
@@ -98,27 +98,27 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
           {/* フッター：作成者といいね数 */}
           <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 min-w-0">
               {project.profiles?.avatar_url ? (
                 <Image
                   src={project.profiles.avatar_url}
                   alt={project.profiles.full_name || '匿名ユーザー'}
                   width={24}
                   height={24}
-                  className="rounded-full"
+                  className="rounded-full flex-shrink-0"
                 />
               ) : (
-                <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs">
+                <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs flex-shrink-0">
                   👤
                 </div>
               )}
-              <span className="text-sm text-gray-600">
+              <span className="text-xs md:text-sm text-gray-600 truncate">
                 {project.profiles?.full_name || '匿名ユーザー'}
               </span>
             </div>
-            <div className="flex items-center space-x-1 text-gray-600">
+            <div className="flex items-center space-x-1 text-gray-600 flex-shrink-0 ml-2">
               <span>❤️</span>
-              <span className="text-sm">{project.likes_count}</span>
+              <span className="text-xs md:text-sm">{project.likes_count}</span>
             </div>
           </div>
         </div>
