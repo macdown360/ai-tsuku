@@ -36,7 +36,7 @@ export default function Navbar() {
         <div className="flex justify-between h-16 items-center gap-2 md:gap-8">
           <div className="flex items-center space-x-4 md:space-x-8 flex-1">
             <Link href="/" className="flex items-center space-x-2 flex-shrink-0">
-              <span className="text-lg md:text-2xl font-bold text-green-700">🌱 Farm</span>
+              <span className="text-lg md:text-2xl font-bold text-green-700">🌱 Appli Farm</span>
             </Link>
             <div className="hidden md:flex space-x-4">
               <Link

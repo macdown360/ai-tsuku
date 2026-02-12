@@ -10,7 +10,7 @@ export default function Footer() {
           {/* ブランド */}
           <div>
             <Link href="/" className="flex items-center space-x-2 mb-4">
-              <span className="text-lg md:text-2xl font-bold text-green-700">🌱 Farm</span>
+              <span className="text-lg md:text-2xl font-bold text-green-700">🌱 Appli Farm</span>
             </Link>
             <p className="text-gray-600 text-xs md:text-sm">
               開発者がつくったWebアプリを紹介し、
