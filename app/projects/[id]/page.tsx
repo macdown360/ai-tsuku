@@ -157,13 +157,15 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
   }
 
   const handleCopyUrl = async () => {
+    if (!project) return
+    
     try {
-      await navigator.clipboard.writeText(window.location.href)
+      await navigator.clipboard.writeText(project.url)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
       const textarea = document.createElement('textarea')
-      textarea.value = window.location.href
+      textarea.value = project.url
       document.body.appendChild(textarea)
       textarea.select()
       document.execCommand('copy')
