@@ -26,12 +26,28 @@ interface Project {
   }
 }
 
+interface Comment {
+  id: string
+  project_id: string
+  user_id: string
+  content: string
+  created_at: string
+  updated_at: string
+  profiles?: {
+    full_name: string | null
+    avatar_url: string | null
+  }
+}
+
 export default function ProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const [project, setProject] = useState<Project | null>(null)
   const [user, setUser] = useState<User | null>(null)
   const [isLiked, setIsLiked] = useState(false)
   const [loading, setLoading] = useState(true)
   const [copied, setCopied] = useState(false)
+  const [comments, setComments] = useState<Comment[]>([])
+  const [newComment, setNewComment] = useState('')
+  const [submittingComment, setSubmittingComment] = useState(false)
   const router = useRouter()
   const supabase = createClient()
   const [resolvedParams, setResolvedParams] = useState<{ id: string } | null>(null)
@@ -81,6 +97,23 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
           .single()
 
         setIsLiked(!!likeData)
+      }
+
+      // コメントを取得
+      const { data: commentsData } = await supabase
+        .from('comments')
+        .select(`
+          *,
+          profiles:user_id (
+            full_name,
+            avatar_url
+          )
+        `)
+        .eq('project_id', resolvedParams.id)
+        .order('created_at', { ascending: false })
+
+      if (commentsData) {
+        setComments(commentsData)
       }
 
       setLoading(false)
@@ -172,6 +205,71 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
       document.body.removeChild(textarea)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
+    }
+  }
+
+  const handleCommentSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!user) {
+      router.push('/auth/login')
+      return
+    }
+
+    if (!project || !newComment.trim()) return
+
+    setSubmittingComment(true)
+
+    try {
+      const { data, error } = await supabase
+        .from('comments')
+        .insert({
+          project_id: project.id,
+          user_id: user.id,
+          content: newComment.trim()
+        })
+        .select(`
+          *,
+          profiles:user_id (
+            full_name,
+            avatar_url
+          )
+        `)
+        .single()
+
+      if (error) throw error
+
+      if (data) {
+        setComments([data, ...comments])
+        setNewComment('')
+      }
+    } catch (error) {
+      console.error('コメントの投稿に失敗しました:', error)
+      alert('コメントの投稿に失敗しました')
+    } finally {
+      setSubmittingComment(false)
+    }
+  }
+
+  const handleCommentDelete = async (commentId: string) => {
+    if (!user) return
+
+    const confirmed = window.confirm('このコメントを削除しますか？')
+    if (!confirmed) return
+
+    try {
+      const { error } = await supabase
+        .from('comments')
+        .delete()
+        .eq('id', commentId)
+        .eq('user_id', user.id)
+
+      if (error) throw error
+
+      setComments(comments.filter(comment => comment.id !== commentId))
+    } catch (error) {
+      console.error('コメントの削除に失敗しました:', error)
+      alert('コメントの削除に失敗しました')
     }
   }
 
@@ -397,6 +495,106 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                 >
                   {copied ? 'コピーしました' : 'URLをコピー'}
                 </button>
+              </div>
+            </div>
+
+            {/* コメントセクション */}
+            <div className="mt-8 pt-8 border-t border-gray-200">
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6">
+                💬 コメント ({comments.length})
+              </h2>
+
+              {/* コメント投稿フォーム */}
+              {user ? (
+                <form onSubmit={handleCommentSubmit} className="mb-8">
+                  <textarea
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder="感想やフィードバック、改善点などを投稿してください..."
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none text-sm md:text-base"
+                    rows={4}
+                    disabled={submittingComment}
+                  />
+                  <div className="mt-3 flex justify-end">
+                    <button
+                      type="submit"
+                      disabled={submittingComment || !newComment.trim()}
+                      className="px-6 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-sm md:text-base"
+                    >
+                      {submittingComment ? '投稿中...' : 'コメントを投稿'}
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <div className="mb-8 p-4 bg-gray-50 rounded-lg text-center">
+                  <p className="text-sm md:text-base text-gray-600 mb-3">
+                    コメントを投稿するにはログインが必要です
+                  </p>
+                  <Link
+                    href="/auth/login"
+                    className="inline-block px-6 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors text-sm md:text-base"
+                  >
+                    ログイン
+                  </Link>
+                </div>
+              )}
+
+              {/* コメントリスト */}
+              <div className="space-y-6">
+                {comments.length === 0 ? (
+                  <p className="text-center text-gray-500 py-8 text-sm md:text-base">
+                    まだコメントがありません。最初のコメントを投稿してみましょう！
+                  </p>
+                ) : (
+                  comments.map((comment) => (
+                    <div key={comment.id} className="bg-gray-50 rounded-lg p-4 md:p-6">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center space-x-3">
+                          {comment.profiles?.avatar_url ? (
+                            <Image
+                              src={comment.profiles.avatar_url}
+                              alt={comment.profiles.full_name || 'User'}
+                              width={40}
+                              height={40}
+                              className="rounded-full"
+                            />
+                          ) : (
+                            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-green-200 flex items-center justify-center">
+                              <span className="text-green-700 font-bold text-sm md:text-base">
+                                {comment.profiles?.full_name?.[0]?.toUpperCase() || '?'}
+                              </span>
+                            </div>
+                          )}
+                          <div>
+                            <p className="font-medium text-gray-900 text-sm md:text-base">
+                              {comment.profiles?.full_name || '匿名ユーザー'}
+                            </p>
+                            <p className="text-xs md:text-sm text-gray-500">
+                              {new Date(comment.created_at).toLocaleDateString('ja-JP', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </p>
+                          </div>
+                        </div>
+                        {user && user.id === comment.user_id && (
+                          <button
+                            onClick={() => handleCommentDelete(comment.id)}
+                            className="text-red-600 hover:text-red-700 text-xs md:text-sm font-medium"
+                          >
+                            削除
+                          </button>
+                        )}
+                      </div>
+                      <p className="text-sm md:text-base text-gray-700 whitespace-pre-wrap">
+                        {comment.content}
+                      </p>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>
