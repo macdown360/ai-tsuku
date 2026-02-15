@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import type { KeyboardEvent } from 'react'
 
 interface ProjectCardProps {
   project: {
@@ -24,9 +26,28 @@ interface ProjectCardProps {
 }
 
 export default function ProjectCard({ project }: ProjectCardProps) {
+  const router = useRouter()
+
+  const handleCardClick = () => {
+    router.push(`/projects/${project.id}`)
+  }
+
+  const handleCardKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      router.push(`/projects/${project.id}`)
+    }
+  }
+
   return (
-    <Link href={`/projects/${project.id}`}>
-      <div className="bg-white rounded-xl hover:shadow-md transition-shadow overflow-hidden cursor-pointer h-full flex flex-col border border-gray-100">
+    <div
+      className="bg-white rounded-xl hover:shadow-md transition-shadow overflow-hidden cursor-pointer h-full flex flex-col border border-gray-100"
+      role="link"
+      tabIndex={0}
+      onClick={handleCardClick}
+      onKeyDown={handleCardKeyDown}
+      aria-label={`${project.title} details`}
+    >
         {/* プロジェクト画像 */}
         <div className="relative h-36 md:h-44 bg-gray-50">
           {project.image_url ? (
@@ -71,7 +92,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           {/* フッター：作成者といいね数 */}
           <div className="flex items-center justify-between pt-3 border-t border-gray-100">
             <div className="flex items-center space-x-2 min-w-0">
-              <Link 
+              <Link
                 href={`/profile/${project.user_id}`}
                 className="flex items-center space-x-1.5 hover:opacity-70 transition-opacity"
                 onClick={(e) => e.stopPropagation()}
@@ -100,6 +121,5 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           </div>
         </div>
       </div>
-    </Link>
   )
 }
