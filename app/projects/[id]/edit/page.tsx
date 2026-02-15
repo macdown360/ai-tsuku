@@ -105,11 +105,11 @@ const TAG_GROUPS = [
     groups: [
       {
         label: '業種',
-        options: ['小売・EC', '不動産', '飲食店', '医療・ヘルスケア', '教育', '製造業', '士業', '建設・工事', '美容・サロン', '運送・物流'],
+        options: ['小売・EC', '不動産', '飲食店', '医療・ヘルスケア', '教育', '製造業', '士業', '建設・工事', '美容・サロン', '運送・物流', 'IT・Web制作', '広告・マーケティング', '金融・保険', '人材派遣'],
       },
       {
         label: '用途',
-        options: ['イベント運営', 'カスタマーサポート', '業務効率化', 'データ管理', '資料作成', 'コスト削減', '初心者向け', 'AI活用'],
+        options: ['プロジェクト管理', 'タスク管理', '顧客管理（CRM）', '在庫管理', '見積書・請求書作成', '勤怠管理', '採用管理', 'イベント運営', 'カスタマーサポート', '業務効率化', 'データ管理', '資料作成', 'コスト削減', 'SNS管理', 'メール配信', '分析・レポート', '初心者向け', '多言語対応'],
       },
     ],
   },
@@ -145,8 +145,6 @@ export default function ProjectEditPage({ params }: { params: Promise<{ id: stri
   const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [openCatGroups, setOpenCatGroups] = useState<Set<string>>(new Set())
-  const [openTagGroups, setOpenTagGroups] = useState<Set<string>>(new Set())
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
@@ -203,18 +201,6 @@ export default function ProjectEditPage({ params }: { params: Promise<{ id: stri
 
     fetchProject()
   }, [resolvedParams, supabase, router])
-
-  const toggleAccordion = (set: Set<string>, setFn: React.Dispatch<React.SetStateAction<Set<string>>>, key: string) => {
-    setFn((prev) => {
-      const next = new Set(prev)
-      if (next.has(key)) {
-        next.delete(key)
-      } else {
-        next.add(key)
-      }
-      return next
-    })
-  }
 
   const handleFileChange = (file: File | null) => {
     if (!file) return
@@ -413,9 +399,6 @@ export default function ProjectEditPage({ params }: { params: Promise<{ id: stri
               <p className="text-xs text-gray-400 mt-0.5">アプリの名前・説明・URLを入力してください</p>
             </div>
             <div className="p-5 space-y-5">
-              </div>
-            </div>
-            <div className="p-6 space-y-5">
               {/* タイトル */}
               <div>
                 <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
@@ -577,20 +560,14 @@ export default function ProjectEditPage({ params }: { params: Promise<{ id: stri
                 </div>
               )}
 
-              {/* アコーディオン形式のカテゴリグループ */}
-              <div className="space-y-2">
+              {/* カテゴリグループ */}
+              <div className="space-y-4">
                 {CATEGORY_GROUPS.map((group) => {
-                  const isOpen = openCatGroups.has(group.label)
                   const selectedCount = group.options.filter((o) => categories.includes(o)).length
                   return (
                     <div key={group.label} className="rounded-xl border border-gray-200 overflow-hidden">
-                      <button
-                        type="button"
-                        onClick={() => toggleAccordion(openCatGroups, setOpenCatGroups, group.label)}
-                        className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left"
-                      >
+                      <div className="px-4 py-3 bg-gray-50">
                         <span className="flex items-center gap-2">
-                          <span>{group.icon}</span>
                           <span className="text-sm font-medium text-gray-700">{group.label}</span>
                           {selectedCount > 0 && (
                             <span className="ml-1 bg-emerald-500 text-white text-xs font-bold rounded-full px-2 py-0.5">
@@ -598,37 +575,32 @@ export default function ProjectEditPage({ params }: { params: Promise<{ id: stri
                             </span>
                           )}
                         </span>
-                        <span className={`text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>
-                          ▼
-                        </span>
-                      </button>
-                      {isOpen && (
-                        <div className="p-3 bg-white">
-                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                            {group.options.map((option) => {
-                              const checked = categories.includes(option)
-                              return (
-                                <label
-                                  key={option}
-                                  className={`flex items-center gap-2 rounded-md border px-3 py-2 cursor-pointer transition-all text-sm ${
-                                    checked
-                                      ? 'border-emerald-400 bg-emerald-50 text-emerald-800 font-medium'
-                                      : 'border-gray-200 bg-white text-gray-700 hover:border-emerald-300 hover:bg-emerald-50/50'
-                                  }`}
-                                >
-                                  <input
-                                    type="checkbox"
-                                    checked={checked}
-                                    onChange={() => toggleCategory(option)}
-                                    className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded"
-                                  />
-                                  <span>{option}</span>
-                                </label>
-                              )
-                            })}
-                          </div>
+                      </div>
+                      <div className="p-3 bg-white">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                          {group.options.map((option) => {
+                            const checked = categories.includes(option)
+                            return (
+                              <label
+                                key={option}
+                                className={`flex items-center gap-2 rounded-md border px-3 py-2 cursor-pointer transition-all text-sm ${
+                                  checked
+                                    ? 'border-emerald-400 bg-emerald-50 text-emerald-800 font-medium'
+                                    : 'border-gray-200 bg-white text-gray-700 hover:border-emerald-300 hover:bg-emerald-50/50'
+                                }`}
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={checked}
+                                  onChange={() => toggleCategory(option)}
+                                  className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded"
+                                />
+                                <span>{option}</span>
+                              </label>
+                            )
+                          })}
                         </div>
-                      )}
+                      </div>
                     </div>
                   )
                 })}
@@ -669,21 +641,15 @@ export default function ProjectEditPage({ params }: { params: Promise<{ id: stri
                 </div>
               )}
 
-              {/* アコーディオン形式のタググループ */}
-              <div className="space-y-2">
+              {/* タググループ */}
+              <div className="space-y-4">
                 {TAG_GROUPS.map((tagGroup) => {
-                  const isOpen = openTagGroups.has(tagGroup.label)
                   const allOptions = tagGroup.groups.flatMap((g) => g.options)
                   const selectedCount = allOptions.filter((o) => tags.includes(o)).length
                   return (
                     <div key={tagGroup.label} className="rounded-xl border border-gray-200 overflow-hidden">
-                      <button
-                        type="button"
-                        onClick={() => toggleAccordion(openTagGroups, setOpenTagGroups, tagGroup.label)}
-                        className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left"
-                      >
+                      <div className="px-4 py-3 bg-gray-50">
                         <span className="flex items-center gap-2">
-                          <span>{tagGroup.icon}</span>
                           <span className="text-sm font-medium text-gray-700">{tagGroup.label}</span>
                           {selectedCount > 0 && (
                             <span className="ml-1 bg-emerald-500 text-white text-xs font-bold rounded-full px-2 py-0.5">
@@ -691,42 +657,37 @@ export default function ProjectEditPage({ params }: { params: Promise<{ id: stri
                             </span>
                           )}
                         </span>
-                        <span className={`text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>
-                          ▼
-                        </span>
-                      </button>
-                      {isOpen && (
-                        <div className="p-3 bg-white space-y-3">
-                          {tagGroup.groups.map((group) => (
-                            <div key={group.label}>
-                              <p className="text-xs font-semibold text-gray-500 mb-2 pl-1">{group.label}</p>
-                              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                                {group.options.map((option) => {
-                                  const checked = tags.includes(option)
-                                  return (
-                                    <label
-                                      key={option}
-                                      className={`flex items-center gap-2 rounded-md border px-3 py-2 cursor-pointer transition-all text-sm ${
-                                        checked
-                                          ? 'border-blue-400 bg-blue-50 text-blue-800 font-medium'
-                                          : 'border-gray-200 bg-white text-gray-700 hover:border-blue-300 hover:bg-blue-50/50'
-                                      }`}
-                                    >
-                                      <input
-                                        type="checkbox"
-                                        checked={checked}
-                                        onChange={() => toggleTag(option)}
-                                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                                      />
-                                      <span>{option}</span>
-                                    </label>
-                                  )
-                                })}
-                              </div>
+                      </div>
+                      <div className="p-3 bg-white space-y-3">
+                        {tagGroup.groups.map((group) => (
+                          <div key={group.label}>
+                            <p className="text-xs font-semibold text-gray-500 mb-2 pl-1">{group.label}</p>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                              {group.options.map((option) => {
+                                const checked = tags.includes(option)
+                                return (
+                                  <label
+                                    key={option}
+                                    className={`flex items-center gap-2 rounded-md border px-3 py-2 cursor-pointer transition-all text-sm ${
+                                      checked
+                                        ? 'border-blue-400 bg-blue-50 text-blue-800 font-medium'
+                                        : 'border-gray-200 bg-white text-gray-700 hover:border-blue-300 hover:bg-blue-50/50'
+                                    }`}
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      checked={checked}
+                                      onChange={() => toggleTag(option)}
+                                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                    />
+                                    <span>{option}</span>
+                                  </label>
+                                )
+                              })}
                             </div>
-                          ))}
-                        </div>
-                      )}
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )
                 })}
