@@ -182,7 +182,7 @@ export default function ProfilePage() {
         <div>
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 sm:gap-0 mb-6">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-              🌱 あなたの畑
+              🌱 {profile?.full_name || 'あなた'}の畑
             </h2>
             <Link
               href="/projects/new"
