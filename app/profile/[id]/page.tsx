@@ -175,20 +175,20 @@ export default function UserProfilePage({ params }: { params: Promise<{ id: stri
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8">
           <div className="bg-white shadow rounded-lg p-4 md:p-6 text-center">
             <p className="text-2xl md:text-3xl font-bold text-green-600">{projects.length}</p>
-            <p className="text-sm md:text-base text-gray-600 mt-2">育てたアプリ</p>
+            <p className="text-sm md:text-base text-gray-600 mt-2">公開した作品</p>
           </div>
           <div className="bg-white shadow rounded-lg p-4 md:p-6 text-center">
             <p className="text-2xl md:text-3xl font-bold text-red-500">
               {projects.reduce((sum, p) => sum + (p.likes_count || 0), 0)}
             </p>
-            <p className="text-sm md:text-base text-gray-600 mt-2">もらった水やり（いいね）</p>
+            <p className="text-sm md:text-base text-gray-600 mt-2">もらったいいね</p>
           </div>
         </div>
 
         {/* プロジェクト一覧 */}
         <div>
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
-            🌱 {profile?.full_name || 'このユーザー'}の畑
+            ✨ {profile?.full_name || 'このユーザー'}の作品
           </h2>
 
           {projects.length > 0 ? (
@@ -200,7 +200,7 @@ export default function UserProfilePage({ params }: { params: Promise<{ id: stri
           ) : (
             <div className="bg-white shadow rounded-lg p-8 md:p-12 text-center">
               <p className="text-gray-500 text-base md:text-lg">
-                🌱 まだ何も植えていません
+                ✨ まだ作品が公開されていません
               </p>
             </div>
           )}

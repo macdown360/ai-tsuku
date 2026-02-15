@@ -36,7 +36,7 @@ export default function Navbar() {
         <div className="flex justify-between h-16 items-center gap-2 md:gap-8">
           <div className="flex items-center space-x-4 md:space-x-8 flex-1">
             <Link href="/" className="flex items-center space-x-2 flex-shrink-0">
-              <span className="text-lg md:text-2xl font-bold text-green-700">🌱 Appli Farm</span>
+              <span className="text-lg md:text-2xl font-bold text-green-700">✨ AIで作ってみた件</span>
             </Link>
             <div className="hidden md:flex space-x-4">
               <Link
@@ -69,7 +69,7 @@ export default function Navbar() {
                   href="/projects/new"
                   className="px-4 py-2 rounded-md bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition-colors whitespace-nowrap"
                 >
-                  🌱 種をまく
+                  ✨ 作品を公開
                 </Link>
                 <Link
                   href="/profile"
@@ -148,7 +148,7 @@ export default function Navbar() {
                     className="block px-3 py-2 rounded-md bg-green-600 text-white text-sm font-medium hover:bg-green-700"
                     onClick={() => setIsOpen(false)}
                   >
-                    🌱 種をまく
+                    ✨ 作品を公開
                   </Link>
                   <Link
                     href="/profile"

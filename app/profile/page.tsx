@@ -168,13 +168,13 @@ export default function ProfilePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8">
           <div className="bg-white shadow rounded-lg p-4 md:p-6 text-center">
             <p className="text-2xl md:text-3xl font-bold text-green-600">{projects.length}</p>
-            <p className="text-sm md:text-base text-gray-600 mt-2">育てたアプリ</p>
+            <p className="text-sm md:text-base text-gray-600 mt-2">公開した作品</p>
           </div>
           <div className="bg-white shadow rounded-lg p-4 md:p-6 text-center">
             <p className="text-2xl md:text-3xl font-bold text-red-500">
               {projects.reduce((sum, p) => sum + (p.likes_count || 0), 0)}
             </p>
-            <p className="text-sm md:text-base text-gray-600 mt-2">もらった水やり（いいね）</p>
+            <p className="text-sm md:text-base text-gray-600 mt-2">もらったいいね</p>
           </div>
         </div>
 
@@ -182,13 +182,13 @@ export default function ProfilePage() {
         <div>
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 sm:gap-0 mb-6">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-              🌱 {profile?.full_name || 'あなた'}の畑
+              ✨ {profile?.full_name || 'あなた'}の作品
             </h2>
             <Link
               href="/projects/new"
               className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm md:text-base whitespace-nowrap"
             >
-              🌱 新しく植える
+              ✨ 新しく公開する
             </Link>
           </div>
 
@@ -201,13 +201,13 @@ export default function ProfilePage() {
           ) : (
             <div className="bg-white shadow rounded-lg p-8 md:p-12 text-center">
               <p className="text-gray-500 text-base md:text-lg mb-4">
-                🌱 まだ何も植えていません
+                ✨ まだ作品が公開されていません
               </p>
               <Link
                 href="/projects/new"
                 className="text-green-600 hover:text-green-700 font-medium text-sm md:text-base"
               >
-                最初の種をまいてみませんか？
+                最初の作品を公開しませんか？
               </Link>
             </div>
           )}

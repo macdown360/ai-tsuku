@@ -332,10 +332,10 @@ export default function NewProjectPage() {
             ← 戻る
           </Link>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mt-3">
-            🌱 新しいアプリの種をまく
+            ✨ 作品を公開する
           </h1>
           <p className="text-gray-500 text-sm mt-1">
-            あなたのアプリを Appli Farm に登録しましょう
+            あなたの作品をみんなと共有しましょう
           </p>
         </div>
 
@@ -709,7 +709,7 @@ export default function NewProjectPage() {
                   disabled={loading}
                   className="flex-1 sm:flex-none px-6 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-bold shadow-sm"
                 >
-                  {loading ? '植えています...' : '🌱 種をまく'}
+                  {loading ? '公開しています...' : '✨ 公開する'}
                 </button>
               </div>
             </div>

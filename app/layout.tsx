@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Appli Farm - アプリを育てるプラットフォーム",
-  description: "自分が作ったWEBサイトやアプリを公開して、利用者からのフィードバックを受けながら一緒に育てていくプラットフォーム",
+  title: "AIで作ってみた件",
+  description: "AIやノーコードで作ったサイトやアプリを気軽に公開・共有できるプラットフォーム",
   icons: {
     icon: "/favicon.svg",
   },

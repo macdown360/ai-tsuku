@@ -54,7 +54,7 @@ export default async function ProjectsPage({
 
       <div className="max-w-7xl mx-auto py-8 md:py-12 px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 sm:gap-8 mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900">🌿 みんなの畑</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900">✨ みんの作品</h1>
         </div>
 
         {/* 検索とフィルター */}
@@ -124,13 +124,13 @@ export default async function ProjectsPage({
         ) : (
           <div className="text-center py-12 bg-white rounded-lg border-2 border-dashed border-green-300">
             <p className="text-gray-500 text-base md:text-lg mb-4">
-              🌱 まだ何も植えられていません
+              ✨ まだ作品が公開されていません
             </p>
             <Link
               href="/projects/new"
               className="text-green-600 hover:text-green-700 font-medium text-sm md:text-base"
             >
-              最初の種をまく
+              最初の作品を公開する
             </Link>
           </div>
         )}

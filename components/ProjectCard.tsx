@@ -38,7 +38,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-400 text-3xl md:text-4xl bg-green-50">
-              🌱
+              ✨
             </div>
           )}
         </div>
@@ -74,7 +74,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           </p>
 
           <p className="text-xs text-gray-500 mb-1">
-            種をまいた日: {new Date(project.created_at).toLocaleDateString('ja-JP')}
+            公開日: {new Date(project.created_at).toLocaleDateString('ja-JP')}
           </p>
           <p className="text-xs text-gray-500 mb-4">
             最終更新日: {new Date(project.updated_at).toLocaleDateString('ja-JP')}

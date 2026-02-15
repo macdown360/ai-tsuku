@@ -322,7 +322,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
       <div className="max-w-4xl mx-auto py-8 md:py-12 px-4 sm:px-6 lg:px-8">
         <div className="mb-6">
           <Link href="/projects" className="text-green-600 hover:text-green-700 flex items-center text-sm md:text-base">
-            ← みんなの畑に戻る
+            ← 作品一覧に戻る
           </Link>
         </div>
 
@@ -400,7 +400,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                   {project.profiles?.full_name || '匿名ユーザー'}
                 </p>
                 <p className="text-xs md:text-sm text-gray-500">
-                  種をまいた日: {new Date(project.created_at).toLocaleDateString('ja-JP')}
+                  公開日: {new Date(project.created_at).toLocaleDateString('ja-JP')}
                 </p>
                 <p className="text-xs md:text-sm text-gray-500">
                   最終更新日: {new Date(project.updated_at).toLocaleDateString('ja-JP')}
@@ -437,7 +437,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                 rel="noopener noreferrer"
                 className="flex-1 px-4 md:px-6 py-2 md:py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 text-center text-sm md:text-base"
               >
-                🌿 サイトを開く
+                🚀 サイトを開く
               </a>
               
               <button
