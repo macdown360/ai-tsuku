@@ -13,6 +13,7 @@ export default function SignupPage() {
   const [agreedToTerms, setAgreedToTerms] = useState(false)
   const [error, setError] = useState<{ title: string; message: string; suggestion: string } | null>(null)
   const [loading, setLoading] = useState(false)
+  const [resending, setResending] = useState(false)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const router = useRouter()
   const supabase = createClient()
@@ -76,6 +77,44 @@ export default function SignupPage() {
     }
   }
 
+  // 確認メール再送信
+  const handleResendConfirmationEmail = async () => {
+    if (!email) {
+      setError({
+        title: 'メールアドレスが入力されていません',
+        message: 'メール再送信するためにメールアドレスを入力してください。',
+        suggestion: 'メールアドレス欄にメールアドレスを入力してください。',
+      })
+      return
+    }
+
+    setResending(true)
+    setError(null)
+
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/confirm`,
+        },
+      })
+
+      if (error) throw error
+
+      setSuccessMessage(
+        `確認メールを再送信しました。${email} に送信されたメールを確認してください。（スパムフォルダもご確認ください）`
+      )
+    } catch (error: any) {
+      const errorMessage = getAuthErrorMessage(
+        error.message || 'メール再送信に失敗しました'
+      )
+      setError(errorMessage)
+    } finally {
+      setResending(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[#f6f6f6] flex flex-col justify-center py-12 px-4 sm:px-6">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -97,22 +136,53 @@ export default function SignupPage() {
         <div className="bg-white py-6 md:py-8 px-5 rounded-xl border border-gray-100 sm:px-10">
           <form className="space-y-5" onSubmit={handleSignup}>
             {error && (
-              <div className="bg-red-50 border border-red-200 rounded-xl p-4">
-                <p className="text-red-900 font-semibold text-sm mb-1">
-                  {error.title}
-                </p>
-                <p className="text-red-700 text-sm mb-2">
-                  {error.message}
-                </p>
-                <p className="text-red-600 text-xs bg-white rounded px-3 py-2">
-                  💡 {error.suggestion}
-                </p>
+              <div>
+                <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+                  <p className="text-red-900 font-semibold text-sm mb-1">
+                    {error.title}
+                  </p>
+                  <p className="text-red-700 text-sm mb-2">
+                    {error.message}
+                  </p>
+                  <p className="text-red-600 text-xs bg-white rounded px-3 py-2">
+                    💡 {error.suggestion}
+                  </p>
+                </div>
+                {error.title.includes('既に登録されています') && (
+                  <Link
+                    href="/auth/login"
+                    className="block w-full mt-3 text-center py-2.5 px-4 rounded-full text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 transition-colors"
+                  >
+                    ログインページへ
+                  </Link>
+                )}
+                {error.title.includes('メール確認リンク') || error.title.includes('有効期限') ? (
+                  <button
+                    type="button"
+                    onClick={handleResendConfirmationEmail}
+                    disabled={resending}
+                    className="w-full mt-3 py-2.5 px-4 rounded-full text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-200 disabled:text-gray-400 transition-colors"
+                  >
+                    {resending ? '再送信中...' : '確認メールを再送信'}
+                  </button>
+                ) : null}
               </div>
             )}
 
             {successMessage && (
-              <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-xl text-sm">
-                {successMessage}
+              <div>
+                <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-xl text-sm">
+                  <p className="font-semibold mb-1">✅ メール送信完了</p>
+                  <p className="text-xs">{successMessage}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleResendConfirmationEmail}
+                  disabled={resending}
+                  className="w-full mt-3 py-2.5 px-4 rounded-full text-sm font-medium text-emerald-600 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 disabled:bg-gray-50 disabled:text-gray-400 disabled:border-gray-200 transition-colors"
+                >
+                  {resending ? '再送信中...' : '確認メールを再送信'}
+                </button>
               </div>
             )}
 

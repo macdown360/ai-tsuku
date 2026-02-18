@@ -90,9 +90,9 @@ export default function ConfirmPage() {
               </div>
               <Link
                 href="/auth/signup"
-                className="block w-full text-center py-2.5 px-4 rounded-full text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600"
+                className="block w-full text-center py-2.5 px-4 rounded-full text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 transition-colors"
               >
-                もう一度登録する
+                登録ページに戻る（再送信できます）
               </Link>
             </div>
           )}

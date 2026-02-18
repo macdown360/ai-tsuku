@@ -62,6 +62,23 @@ export function getAuthErrorMessage(errorMessage: string): ErrorMessage {
     }
   }
 
+  // メール確認リンクが無効または期限切れ
+  if (
+    message.includes('invalid') && message.includes('link') ||
+    message.includes('email link is invalid') ||
+    message.includes('token') && message.includes('expired') ||
+    message.includes('invalid otp') ||
+    message.includes('otp_expired')
+  ) {
+    return {
+      title: 'メール確認リンクが無効または有効期限が切れています',
+      message:
+        'メール内のリンクが無効になっているか、24時間以上経過しています。',
+      suggestion:
+        '新しい確認メールを再送信してもらってください。[確認メール再送信]ボタンをクリックしてください。',
+    }
+  }
+
   // メールアドレスが無効
   if (message.includes('invalid email')) {
     return {
@@ -92,10 +109,10 @@ export function getAuthErrorMessage(errorMessage: string): ErrorMessage {
     message.includes('email already registered')
   ) {
     return {
-      title: 'アカウントが既に存在します',
-      message: 'このメールアドレスは既に登録されています。',
+      title: 'このメールアドレスは既に登録されています',
+      message: 'このメールアドレスのアカウントが既に存在します。',
       suggestion:
-        'ログインページからログインするか、新しいメールアドレスで登録してください。',
+        'ログインページからログインしてください。パスワードを忘れた場合は、「パスワードをリセット」から新しいパスワードを設定できます。',
     }
   }
 

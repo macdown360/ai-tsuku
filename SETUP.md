@@ -105,10 +105,14 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 1. 左メニューの「**Authentication**」→「**URL Configuration**」をクリック
 2. 「**Redirect URLs**」セクションで「**Add a redirect URL**」をクリック
 3. 以下のURLを追加（開発環境）:
-   - `http://localhost:3000/auth/confirm`
-   - `http://localhost:3000/`
+   - `http://localhost:3000/auth/confirm` （メール確認用）
+   - `http://localhost:3000/auth/update-password` （パスワードリセット用）
+   - `http://localhost:3000/auth/login` （ログイン後）
+   - `http://localhost:3000/` （登録/確認完了後）
 4. 本番環境では以下を追加:
    - `https://yourdomain.com/auth/confirm`
+   - `https://yourdomain.com/auth/update-password`
+   - `https://yourdomain.com/auth/login`
    - `https://yourdomain.com/`
 5. 「**Save**」をクリック
 
@@ -142,8 +146,11 @@ npm run dev
 - [ ] Supabaseプロジェクトを作成
 - [ ] データベーススキーマを実行
 - [ ] Supabase Storageバケット（project-images）を作成
-- [ ] メール認証を有効化（Authentication → Email确认）
-- [ ] コールバックURLを設定（localhost と 本番ドメイン）
+- [ ] メール認証を有効化（Authentication → Email Confirm）
+- [ ] コールバックURLを設定（以下3つ）:
+  - [ ] `/auth/confirm` - メール確認用
+  - [ ] `/auth/update-password` - パスワードリセット用
+  - [ ] `localhost と 本番ドメイン両方`
 - [ ] `.env.local` に認証情報を設定
 - [ ] `npm install` を実行（初回のみ）
 - [ ] `npm run dev` で開発サーバーを起動
@@ -174,6 +181,57 @@ npm run dev
 3. **本番環境用のメール設定:**
    - SMTP または メールプロバイダーを設定してください
    - Authentication → Providers → Email → SMTP settings で設定
+
+### エラー: "email link is invalid or has expired"
+
+このエラーは、メール内のリンクが**無効または有効期限が切れている**ことを示します。
+
+**原因と解決方法:**
+
+1. **有効期限が切れている（最も一般的）**
+   - 確認メール内のリンクは**24時間**で有効期限が切れます
+   - 解決策: 登録ページで登録済みのメールアドレスを入力して、「確認メールを再送信」ボタンをクリック
+
+2. **メールアドレスが正しいか確認**
+   - メールアドレスのタイプミスがないか確認
+   - 正しいメールアドレスで再度登録してください
+
+3. **Supabase URL Configuration を確認**
+   - Authentication → URL Configuration で `http://localhost:3000/auth/confirm` が登録されているか確認
+   - **ドメイン名に大文字/小文字の違い、`http://` vs `https://` の違いがないか確認**
+   - 違いがある場合は、Supabaseダッシュボードで設定を修正してください
+
+4. **スパムフォルダを確認**
+   - 確認メール自体が受信できていない場合、スパムフォルダを確認してください
+
+5. **メール再送信機能を使用**
+   ```
+   1. http://localhost:3000/auth/signup にアクセス
+   2. 登録済みのメールアドレスを入力
+   3. 「確認メールを再送信」ボタンをクリック
+   4. 新しい確認メールが送信されます（新しいリンク）
+   ```
+
+### パスワードをリセットする方法
+
+パスワードを忘れた場合は、以下の手順でパスワードをリセットできます：
+
+**手順:**
+
+1. ログインページ（`http://localhost:3000/auth/login`）にアクセス
+2. 「パスワードをお忘れですか？」をクリック
+3. メールアドレスを入力
+4. 「リセットメールを送信」をクリック
+5. メーボックスを確認（15分以内に到着）
+6. メール内のリンクをクリック
+7. 新しいパスワードを入力
+8. パスワードを更新
+9. ログインページからログイン
+
+**注意:**
+- パスワードリセットメール内のリンクの有効期限は**1時間**です
+- Supabase URL Configuration に `http://localhost:3000/auth/update-password` が登録されている必要があります
+- 本番環境では `https://yourdomain.com/auth/update-password` を登録してください
 
 ### エラー: 画像がアップロードできない・「未認可」エラーが出る
 - Supabase Storage の `project-images` バケットが存在するか確認
