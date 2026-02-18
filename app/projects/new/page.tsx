@@ -491,7 +491,6 @@ export default function NewProjectPage() {
                   <input
                     type="text"
                     id="otherAiTool"
-                    required
                     value={otherAiTool}
                     onChange={(e) => setOtherAiTool(e.target.value)}
                     className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors text-sm"
