@@ -1,0 +1,48 @@
+# SEO最適化：全検索エンジンに対してクローリングを許可
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /auth/
+Disallow: /_next/
+Disallow: /*.json$
+Disallow: /.env*
+Disallow: /admin
+
+# 特定の検索エンジンへの指示
+
+# Google
+User-agent: Googlebot
+Allow: /
+
+# Bing
+User-agent: Bingbot
+Allow: /
+
+# その他の主要な検索エンジン
+User-agent: Yahoo! Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+# 低速クローラー（例：悪意あるボット）の制限
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+# クローリング速度の制御
+Crawl-delay: 0.5
+
+# リクエストレート制限（秒単位）
+Request-rate: 1 second
+
+# Sitemap - 環境に応じて設定
+# 本番環境: https://your-domain.com/sitemap.xml
+# 開発環境: http://localhost:3000/sitemap.xml
+# Sitemap: https://NEXT_PUBLIC_BASE_URL/sitemap.xml
+

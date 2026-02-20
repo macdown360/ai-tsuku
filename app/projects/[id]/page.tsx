@@ -9,6 +9,7 @@ import Navbar from '@/components/Navbar'
 import ProjectCard from '@/components/ProjectCard'
 import ShareButtons from '@/components/ShareButtons'
 import ProjectStructuredData from '@/components/ProjectStructuredData'
+import BreadcrumbSchema from '@/components/BreadcrumbSchema'
 import type { User } from '@supabase/supabase-js'
 
 interface Project {
@@ -479,10 +480,13 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     <div className="min-h-screen bg-[#f6f6f6]">
       <Navbar />
       {resolvedParams && project && (
-        <ProjectStructuredData 
-          project={project}
-          pageUrl={`${typeof window !== 'undefined' ? window.location.href : 'https://tool-park.example.com'}`}
-        />
+        <>
+          <ProjectStructuredData 
+            project={project}
+            pageUrl={`${typeof window !== 'undefined' ? window.location.href : 'https://tool-park.example.com'}`}
+          />
+          <BreadcrumbSchema projectTitle={project.title} projectId={project.id} />
+        </>
       )}
       <div className="max-w-3xl mx-auto py-8 md:py-10 px-4 sm:px-6">
         <div className="mb-4">

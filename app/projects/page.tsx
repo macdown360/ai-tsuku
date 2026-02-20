@@ -1,7 +1,25 @@
+import { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import ProjectCard from '@/components/ProjectCard'
+
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://tool-park.example.com'
+
+export const metadata: Metadata = {
+  title: 'プロジェクト一覧 | AIで作ってみた件',
+  description: 'AI・ノーコードで作ったプロジェクト事例を特集。ChatGPT、Notion、Zapierなど様々なツールを使った作品を発見。',
+  keywords: ['プロジェクト', 'AI活用例', 'ノーコード事例', 'ChatGPT活用', 'Notion活用'],
+  openGraph: {
+    title: 'プロジェクト一覧 - AIで作ってみた件',
+    description: 'AI・ノーコードで作ったプロジェクト事例を特集。',
+    url: `${baseUrl}/projects`,
+    type: 'website',
+  },
+  alternates: {
+    canonical: `${baseUrl}/projects`,
+  },
+}
 
 export default async function ProjectsPage({
   searchParams,
