@@ -44,7 +44,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
   return (
     <div
-      className="bg-white rounded-2xl hover:shadow-lg transition-shadow overflow-hidden cursor-pointer flex flex-col border border-slate-200/60"
+      className="bg-white rounded-2xl hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer flex flex-col border border-slate-200/60 hover:border-slate-300 hover:-translate-y-1"
       role="link"
       tabIndex={0}
       onClick={handleCardClick}
@@ -152,10 +152,10 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
           {/* フッター：作成者といいね数 */}
           <div className="flex items-center justify-between pt-3 mt-auto border-t border-slate-200/60">
-            <div className="flex items-center space-x-2 min-w-0">
+            <div className="flex items-center space-x-2 min-w-0 flex-1">
               <Link
                 href={`/profile/${project.user_id}`}
-                className="flex items-center space-x-1.5 hover:opacity-70 transition-opacity"
+                className="flex items-center space-x-1.5 hover:opacity-70 transition-opacity min-w-0"
                 onClick={(e) => e.stopPropagation()}
               >
                 {project.profiles?.avatar_url ? (
@@ -176,9 +176,11 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 </span>
               </Link>
             </div>
-            <div className="flex items-center space-x-1 text-slate-400 flex-shrink-0 ml-2">
-              <span className="text-xs">❤️</span>
-              <span className="text-xs">{project.likes_count}</span>
+            <div className="flex items-center space-x-3 flex-shrink-0 ml-2">
+              <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-rose-50 text-rose-600">
+                <span className="text-xs font-semibold">❤️</span>
+                <span className="text-xs font-medium">{project.likes_count}</span>
+              </div>
             </div>
           </div>
 

@@ -84,7 +84,13 @@
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+NEXT_PUBLIC_BASE_URL=https://your-domain.com
 ```
+
+> **NEXT_PUBLIC_BASE_URL について**  
+> ローカル開発環境: `http://localhost:3000`  
+> 本番環境: あなたのドメイン URL（例: `https://ai-tsuku.example.com`）  
+> SNS シェアや OGP 画像生成に使用されます
 
 ### 4.5 メール認証の有効化（重要）
 

@@ -15,11 +15,37 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://tool-park.example.com";
+const ogImage = `${baseUrl}/og-image.png`;
+
 export const metadata: Metadata = {
   title: "AIで作ってみた件",
   description: "AIやノーコードで作ったサイトやアプリを気軽に公開・共有できるプラットフォーム",
   icons: {
     icon: "/favicon.svg?v=20260215",
+  },
+  metadataBase: new URL(baseUrl),
+  openGraph: {
+    type: "website",
+    locale: "ja_JP",
+    url: baseUrl,
+    siteName: "AIで作ってみた件",
+    title: "AIで作ってみた件",
+    description: "AIやノーコードで作ったサイトやアプリを気軽に公開・共有できるプラットフォーム",
+    images: [
+      {
+        url: ogImage,
+        width: 1200,
+        height: 630,
+        alt: "AIで作ってみた件",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AIで作ってみた件",
+    description: "AIやノーコードで作ったサイトやアプリを気軽に公開・共有できるプラットフォーム",
+    images: [ogImage],
   },
 };
 
