@@ -68,8 +68,7 @@ export default async function Home() {
             AIで作ったものを、<br className="md:hidden" />気軽にシェアしよう
           </h1>
           <p className="text-sm md:text-base text-gray-500 mb-8 leading-relaxed">
-            AIやノーコードで作ったサイトやアプリを、<br className="hidden md:inline" />
-            簡単に公開・共有できるプラットフォーム
+            AIやノーコードで作ったサイトやアプリを、簡単に公開・共有できるプラットフォーム
           </p>
           <div className="flex justify-center gap-3">
             <Link
