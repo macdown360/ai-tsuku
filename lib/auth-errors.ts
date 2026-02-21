@@ -106,7 +106,11 @@ export function getAuthErrorMessage(errorMessage: string): ErrorMessage {
   // メールが既に使用されている
   if (
     message.includes('user already exists') ||
-    message.includes('email already registered')
+    message.includes('user already registered') ||
+    message.includes('user_already_exists') ||
+    message.includes('email already registered') ||
+    message.includes('email already in use') ||
+    message.includes('duplicate key value')
   ) {
     return {
       title: 'このメールアドレスは既に登録されています',
