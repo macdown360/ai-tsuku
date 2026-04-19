@@ -75,37 +75,25 @@ export default function Navbar() {
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center space-x-1">
             <Link
-              href="/"
+              href="/projects/new"
               className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
-                pathname === '/'
+                pathname === '/projects/new'
+                  ? 'text-emerald-700 font-semibold'
+                  : 'text-gray-500 hover:text-gray-900'
+              }`}
+            >
+              掲載する
+            </Link>
+            <Link
+              href="/projects"
+              className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
+                pathname.startsWith('/projects') && pathname !== '/projects/new'
                   ? 'text-gray-900 font-semibold'
                   : 'text-gray-500 hover:text-gray-900'
               }`}
             >
-              ホーム
+              探す
             </Link>
-
-            <div className="w-px h-5 bg-gray-200 mx-2" />
-
-            {user ? (
-              <>
-                <Link
-                  href="/projects/new"
-                  className="px-4 py-1.5 rounded-full bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600 transition-colors"
-                >
-                  掲載する
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link
-                  href="/projects/new"
-                  className="px-4 py-1.5 rounded-full bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600 transition-colors"
-                >
-                  掲載する
-                </Link>
-              </>
-            )}
           </div>
 
           {/* Mobile menu button */}
@@ -144,37 +132,23 @@ export default function Navbar() {
             </form>
             <div className="space-y-1 pt-2">
               <Link
-                href="/"
+                href="/projects/new"
                 className={`block px-3 py-2 rounded-md text-sm ${
-                  pathname === '/' ? 'text-gray-900 font-semibold' : 'text-gray-500'
+                  pathname === '/projects/new' ? 'text-emerald-700 font-semibold' : 'text-gray-500'
                 }`}
                 onClick={() => setIsOpen(false)}
               >
-                ホーム
+                掲載する
               </Link>
-            </div>
-            <div className="space-y-1 border-t border-gray-100 pt-2 mt-2">
-              {user ? (
-                <>
-                  <Link
-                    href="/projects/new"
-                    className="block px-3 py-2 rounded-md text-sm font-medium text-emerald-600"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    掲載する
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link
-                    href="/projects/new"
-                    className="block px-3 py-2 rounded-md text-sm font-medium text-emerald-600"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    掲載する
-                  </Link>
-                </>
-              )}
+              <Link
+                href="/projects"
+                className={`block px-3 py-2 rounded-md text-sm ${
+                  pathname.startsWith('/projects') && pathname !== '/projects/new' ? 'text-gray-900 font-semibold' : 'text-gray-500'
+                }`}
+                onClick={() => setIsOpen(false)}
+              >
+                探す
+              </Link>
             </div>
           </div>
         )}

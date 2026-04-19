@@ -397,32 +397,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     }
   }
 
-  const handleDelete = async () => {
-    if (!user) {
-      router.push('/auth/login')
-      return
-    }
-
-    if (!project) return
-
-    const confirmed = window.confirm('このプロジェクトを削除しますか？この操作は取り消せません。')
-    if (!confirmed) return
-
-    const { error } = await supabase
-      .from('projects')
-      .delete()
-      .eq('id', project.id)
-
-    if (error) {
-      console.error('プロジェクトの削除に失敗しました:', error)
-      window.alert('削除に失敗しました。もう一度お試しください。')
-      return
-    }
-
-    router.push('/projects')
-    router.refresh()
-  }
-
   if (loading) {
     return (
       <div className="min-h-screen bg-[#f6f6f6]">
@@ -437,8 +411,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
   if (!project) {
     return null
   }
-
-  const isOwner = !!project.user_id && user?.id === project.user_id
 
   return (
     <div className="min-h-screen bg-[#f6f6f6]">
@@ -491,24 +463,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
             <h1 className="text-xl md:text-3xl font-bold text-gray-900 mb-4 leading-tight">
               {project.title}
             </h1>
-
-            {isOwner && (
-              <div className="flex gap-2 mb-5">
-                <Link
-                  href={`/projects/${project.id}/edit`}
-                  className="px-4 py-1.5 border border-gray-200 text-gray-600 rounded-full text-xs hover:bg-gray-50 transition-colors"
-                >
-                  編集
-                </Link>
-                <button
-                  type="button"
-                  onClick={handleDelete}
-                  className="px-4 py-1.5 border border-gray-200 text-red-500 rounded-full text-xs hover:bg-red-50 transition-colors"
-                >
-                  削除
-                </button>
-              </div>
-            )}
 
             {/* 作成者情報 */}
             <div className="mb-6">
