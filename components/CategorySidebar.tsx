@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { CATEGORY_GROUPS } from '@/lib/categories'
 
 type CategorySidebarProps = {
@@ -11,26 +11,56 @@ type CategorySidebarProps = {
 }
 
 export default function CategorySidebar({ activeCategory, search, availableCategories }: CategorySidebarProps) {
-  const availableSet = useMemo(() => new Set(availableCategories), [availableCategories])
-
-  const groups = useMemo(
-    () =>
-      CATEGORY_GROUPS.map((group) => ({
-        ...group,
-        options: group.options.filter((option) => availableSet.has(option)),
-      })).filter((group) => group.options.length > 0),
-    [availableSet]
+  const knownOptions = useMemo(
+    () => new Set(CATEGORY_GROUPS.flatMap((group) => group.options)),
+    []
   )
 
-  const initialOpen = useMemo(() => {
-    const targetGroup = groups.find((group) => group.options.includes(activeCategory || ''))
-    if (targetGroup) {
-      return new Set([targetGroup.label])
-    }
-    return new Set(groups.map((group) => group.label))
-  }, [groups, activeCategory])
+  const uncategorizedOptions = useMemo(
+    () => availableCategories.filter((category) => !knownOptions.has(category)).sort((a, b) => a.localeCompare(b, 'ja')),
+    [availableCategories, knownOptions]
+  )
 
-  const [openGroups, setOpenGroups] = useState<Set<string>>(initialOpen)
+  const groups = useMemo(() => {
+    if (uncategorizedOptions.length === 0) {
+      return CATEGORY_GROUPS
+    }
+
+    return [
+      ...CATEGORY_GROUPS,
+      {
+        label: 'その他',
+        icon: '📦',
+        options: uncategorizedOptions,
+      },
+    ]
+  }, [uncategorizedOptions])
+
+  const [openGroups, setOpenGroups] = useState<Set<string>>(new Set(groups.map((group) => group.label)))
+
+  useEffect(() => {
+    setOpenGroups((prev) => {
+      if (prev.size > 0) {
+        return prev
+      }
+      return new Set(groups.map((group) => group.label))
+    })
+  }, [groups])
+
+  useEffect(() => {
+    if (!activeCategory) return
+    const targetGroup = groups.find((group) => group.options.includes(activeCategory))
+    if (!targetGroup) return
+
+    setOpenGroups((prev) => {
+      if (prev.has(targetGroup.label)) {
+        return prev
+      }
+      const next = new Set(prev)
+      next.add(targetGroup.label)
+      return next
+    })
+  }, [activeCategory, groups])
 
   const toggleGroup = (label: string) => {
     setOpenGroups((prev) => {
