@@ -76,20 +76,20 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-1">
             <Link
               href="/projects/new"
-              className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
+              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${
                 pathname === '/projects/new'
-                  ? 'text-emerald-700 font-semibold'
-                  : 'text-gray-500 hover:text-gray-900'
+                  ? 'bg-emerald-500 border-emerald-500 text-white'
+                  : 'bg-emerald-500 border-emerald-500 text-white hover:bg-emerald-600 hover:border-emerald-600'
               }`}
             >
               掲載する
             </Link>
             <Link
               href="/projects"
-              className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
+              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${
                 pathname.startsWith('/projects') && pathname !== '/projects/new'
-                  ? 'text-gray-900 font-semibold'
-                  : 'text-gray-500 hover:text-gray-900'
+                  ? 'bg-white border-gray-900 text-gray-900'
+                  : 'bg-white border-gray-300 text-gray-700 hover:border-gray-400 hover:text-gray-900'
               }`}
             >
               探す
@@ -133,8 +133,10 @@ export default function Navbar() {
             <div className="space-y-1 pt-2">
               <Link
                 href="/projects/new"
-                className={`block px-3 py-2 rounded-md text-sm ${
-                  pathname === '/projects/new' ? 'text-emerald-700 font-semibold' : 'text-gray-500'
+                className={`block px-3 py-2 rounded-full text-sm text-center font-medium border transition-colors ${
+                  pathname === '/projects/new'
+                    ? 'bg-emerald-500 border-emerald-500 text-white'
+                    : 'bg-emerald-500 border-emerald-500 text-white hover:bg-emerald-600 hover:border-emerald-600'
                 }`}
                 onClick={() => setIsOpen(false)}
               >
@@ -142,8 +144,10 @@ export default function Navbar() {
               </Link>
               <Link
                 href="/projects"
-                className={`block px-3 py-2 rounded-md text-sm ${
-                  pathname.startsWith('/projects') && pathname !== '/projects/new' ? 'text-gray-900 font-semibold' : 'text-gray-500'
+                className={`block px-3 py-2 rounded-full text-sm text-center font-medium border transition-colors ${
+                  pathname.startsWith('/projects') && pathname !== '/projects/new'
+                    ? 'bg-white border-gray-900 text-gray-900'
+                    : 'bg-white border-gray-300 text-gray-700 hover:border-gray-400 hover:text-gray-900'
                 }`}
                 onClick={() => setIsOpen(false)}
               >
