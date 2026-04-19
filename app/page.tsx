@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import Navbar from '@/components/Navbar'
 import ProjectCard from '@/components/ProjectCard'
+import { HOME_CATEGORY_NAMES } from '@/lib/categories'
 
 export default async function Home() {
   const supabase = await createClient()
@@ -26,17 +27,8 @@ export default async function Home() {
     .limit(8)
 
   // カテゴリ別のプロジェクトを取得
-  const categoryNames = [
-    '営業・販売管理',
-    'マーケティング支援',
-    '文書作成・編集',
-    'データ分析・可視化',
-    'eラーニング',
-    '自動化・効率化ツール',
-  ]
-
   const categorySections = await Promise.all(
-    categoryNames.map(async (category) => {
+    HOME_CATEGORY_NAMES.map(async (category) => {
       const { data: projects } = await supabase
         .from('projects')
         .select(`

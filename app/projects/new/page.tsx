@@ -6,116 +6,12 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 import Navbar from '@/components/Navbar'
-
-const CATEGORY_GROUPS = [
-  {
-    label: 'コア業務',
-    icon: '💼',
-    options: [
-      '営業・販売管理',
-      '顧客管理（CRM）',
-      'プロジェクト管理',
-      'タスク・ToDo管理',
-      'スケジュール・予定管理',
-      '在庫管理',
-      '経理・会計',
-      '人事・勤怠管理',
-      '請求書・見積書作成',
-    ],
-  },
-  {
-    label: 'マーケティング・コミュニケーション',
-    icon: '📢',
-    options: [
-      'マーケティング支援',
-      'SNS管理',
-      'メール配信',
-      'アンケート・フォーム作成',
-      'チャット・メッセージング',
-    ],
-  },
-  {
-    label: 'コンテンツ制作',
-    icon: '🎨',
-    options: [
-      '文書作成・編集',
-      'デザイン・画像編集',
-      '動画編集',
-      'プレゼンテーション作成',
-      'Webサイト作成',
-    ],
-  },
-  {
-    label: 'データ・分析',
-    icon: '📊',
-    options: [
-      'データ分析・可視化',
-      'レポート作成',
-      'ダッシュボード',
-      '計算・シミュレーション',
-      'ファイル変換・処理',
-    ],
-  },
-  {
-    label: '学習・教育',
-    icon: '📚',
-    options: [
-      'eラーニング',
-      'クイズ・テスト作成',
-      '学習管理',
-      'ドキュメント共有',
-    ],
-  },
-  {
-    label: 'その他',
-    icon: '🔧',
-    options: [
-      '自動化・効率化ツール',
-      'API連携ツール',
-      'AI活用ツール',
-      'セキュリティ・認証',
-      'その他ユーティリティ',
-    ],
-  },
-]
-
-const TAG_GROUPS = [
-  {
-    label: '利用形態タグ',
-    icon: '🏷️',
-    groups: [
-      {
-        label: '料金',
-        options: ['無料', '有料', 'フリーミアム'],
-      },
-      {
-        label: '利用規模',
-        options: ['個人向け', 'チーム向け', '企業向け'],
-      },
-      {
-        label: 'アクセス',
-        options: ['ブラウザ完結', 'アカウント不要', 'モバイル対応', 'インストール不要', 'PWA対応', 'オフライン対応'],
-      },
-    ],
-  },
-  {
-    label: '業界・用途タグ',
-    icon: '🏢',
-    groups: [
-      {
-        label: '業種',
-        options: ['小売・EC', '不動産', '飲食店', '医療・ヘルスケア', '教育', '製造業', '士業', '建設・工事', '美容・サロン', '運送・物流', 'IT・Web制作', '広告・マーケティング', '金融・保険', '人材派遣'],
-      },
-      {
-        label: '用途',
-        options: ['プロジェクト管理', 'タスク管理', '顧客管理（CRM）', '在庫管理', '見積書・請求書作成', '勤怠管理', '採用管理', 'イベント運営', 'カスタマーサポート', '業務効率化', 'データ管理', '資料作成', 'コスト削減', 'SNS管理', 'メール配信', '分析・レポート', '初心者向け', '多言語対応'],
-      },
-    ],
-  },
-]
+import { CATEGORY_GROUPS } from '@/lib/categories'
+import { MAX_TAG_SELECTION, TAG_GROUPS } from '@/lib/tags'
 
 const TITLE_MAX = 80
 const DESC_MAX = 2000
+const TAG_LIMIT_ERROR = `タグは最大${MAX_TAG_SELECTION}つまで選択できます`
 
 export default function NewProjectPage() {
   const [step, setStep] = useState<1 | 2 | 3>(1)
@@ -196,9 +92,20 @@ export default function NewProjectPage() {
   }
 
   const toggleTag = (value: string) => {
-    setTags((prev) =>
-      prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]
-    )
+    setTags((prev) => {
+      if (prev.includes(value)) {
+        setError((current) => (current === TAG_LIMIT_ERROR ? null : current))
+        return prev.filter((item) => item !== value)
+      }
+
+      if (prev.length >= MAX_TAG_SELECTION) {
+        setError(TAG_LIMIT_ERROR)
+        return prev
+      }
+
+      setError((current) => (current === TAG_LIMIT_ERROR ? null : current))
+      return [...prev, value]
+    })
   }
 
   const validateStep1 = () => {
@@ -270,6 +177,13 @@ export default function NewProjectPage() {
         setError('カテゴリを1つ以上選択してください')
         setLoading(false)
         setStep(2)
+        return
+      }
+
+      if (tags.length > MAX_TAG_SELECTION) {
+        setError(TAG_LIMIT_ERROR)
+        setLoading(false)
+        setStep(3)
         return
       }
 
@@ -656,12 +570,12 @@ export default function NewProjectPage() {
             <section className="bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden">
               <div className="px-5 py-4 border-b border-slate-100">
                 <h2 className="text-sm font-semibold text-slate-800">（3）タグ</h2>
-                <p className="text-xs text-slate-400 mt-0.5">利用条件や対象業界を指定できます（任意・複数選択可）</p>
+                <p className="text-xs text-slate-400 mt-0.5">対象ユーザー・料金形態・使用技術を指定できます（任意・複数選択可・最大5つ）</p>
               </div>
               <div className="p-5">
                 {tags.length > 0 && (
                   <div className="mb-4 pb-4 border-b border-slate-100">
-                    <p className="text-xs font-medium text-slate-500 mb-2">選択中（{tags.length}件）</p>
+                    <p className="text-xs font-medium text-slate-500 mb-2">選択中（{tags.length}/{MAX_TAG_SELECTION}件）</p>
                     <div className="flex flex-wrap gap-2">
                       {tags.map((tag) => (
                         <button
@@ -702,11 +616,14 @@ export default function NewProjectPage() {
                               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                                 {group.options.map((option) => {
                                   const checked = tags.includes(option)
+                                  const disabled = !checked && tags.length >= MAX_TAG_SELECTION
                                   return (
                                     <label
                                       key={option}
                                       className={`flex items-center gap-2 rounded-lg border px-3 py-2 cursor-pointer transition-all duration-200 text-sm ${
-                                        checked
+                                        disabled
+                                          ? 'border-slate-200 bg-slate-50 text-slate-400 cursor-not-allowed'
+                                          : checked
                                           ? 'border-blue-300 bg-blue-50/80 text-blue-700 font-medium shadow-sm shadow-blue-100'
                                           : 'border-slate-200 bg-white text-slate-600 hover:border-blue-200 hover:bg-blue-50/30'
                                       }`}
@@ -715,6 +632,7 @@ export default function NewProjectPage() {
                                         type="checkbox"
                                         checked={checked}
                                         onChange={() => toggleTag(option)}
+                                        disabled={disabled}
                                         className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded"
                                       />
                                       <span>{option}</span>
@@ -729,6 +647,9 @@ export default function NewProjectPage() {
                     )
                   })}
                 </div>
+                {tags.length >= MAX_TAG_SELECTION && (
+                  <p className="mt-3 text-xs text-amber-600">タグは最大{MAX_TAG_SELECTION}つまで選択できます</p>
+                )}
               </div>
             </section>
           )}
