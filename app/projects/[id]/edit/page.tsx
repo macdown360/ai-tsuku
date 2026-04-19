@@ -385,7 +385,7 @@ export default function ProjectEditPage({ params }: { params: Promise<{ id: stri
                   placeholder="どんなアプリですか？特徴や使い方を書いてみましょう"
                 />
                 <div className="flex justify-between mt-1">
-                  <p className="text-xs text-gray-400">特徴、使い方、技術スタックなどを記載</p>
+                  <p className="text-xs text-gray-400">改行・Markdown記法に対応（例: # 見出し / - 箇条書き）</p>
                   <p className={`text-xs ${description.length > DESC_MAX * 0.9 ? 'text-amber-500' : 'text-gray-400'}`}>
                     {description.length}/{DESC_MAX}
                   </p>

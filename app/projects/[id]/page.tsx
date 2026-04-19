@@ -10,6 +10,7 @@ import ProjectCard from '@/components/ProjectCard'
 import ShareButtons from '@/components/ShareButtons'
 import ProjectStructuredData from '@/components/ProjectStructuredData'
 import BreadcrumbSchema from '@/components/BreadcrumbSchema'
+import MarkdownContent from '@/components/MarkdownContent'
 import type { User } from '@supabase/supabase-js'
 
 interface Project {
@@ -480,9 +481,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
             {/* 説明 */}
             <div className="mb-6">
-              <p className="text-sm md:text-base text-gray-700 whitespace-pre-wrap leading-relaxed">
-                {project.description}
-              </p>
+              <MarkdownContent
+                content={project.description}
+                className="text-sm md:text-base text-gray-700"
+              />
             </div>
 
             {/* タグ */}

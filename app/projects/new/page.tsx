@@ -352,6 +352,10 @@ export default function NewProjectPage() {
         </div>
 
         <form onSubmit={handleSubmit} onKeyDown={(e) => {
+          const target = e.target as HTMLElement
+          const isTextarea = target.tagName.toLowerCase() === 'textarea'
+          if (isTextarea) return
+
           if (e.key === 'Enter' && e.ctrlKey === false && e.metaKey === false) {
             e.preventDefault()
           }
@@ -400,7 +404,7 @@ export default function NewProjectPage() {
                     placeholder="どんなプロダクトですか？特徴や使い方を書いてみましょう"
                   />
                   <div className="flex justify-between mt-1.5">
-                    <p className="text-xs text-slate-400">特徴、使い方、技術スタックなどを記載</p>
+                    <p className="text-xs text-slate-400">改行・Markdown記法に対応（例: # 見出し / - 箇条書き）</p>
                     <p className={`text-xs ${description.length > DESC_MAX * 0.9 ? 'text-amber-500' : 'text-slate-400'}`}>
                       {description.length}/{DESC_MAX}
                     </p>
