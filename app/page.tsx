@@ -56,8 +56,13 @@ export default async function Home() {
       {/* Hero Section - noteのようにシンプル */}
       <section className="bg-white border-b border-gray-100">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 md:py-16 text-center">
-          <div className="inline-block bg-gray-200 text-gray-700 text-xs px-3 py-1.5 rounded-md mb-2">
-            ログイン不要
+          <div className="flex justify-center gap-2 mb-2">
+            <span className="bg-gray-200 text-gray-700 text-xs px-3 py-1.5 rounded-md">
+              ログイン不要
+            </span>
+            <span className="bg-gray-200 text-gray-700 text-xs px-3 py-1.5 rounded-md">
+              掲載無料
+            </span>
           </div>
           <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight tracking-tight whitespace-nowrap">
             AIで作ったプロダクトやアプリを気軽にシェア
