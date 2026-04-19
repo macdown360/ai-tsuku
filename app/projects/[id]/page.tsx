@@ -34,6 +34,8 @@ interface Project {
   profiles?: {
     full_name: string | null
     avatar_url: string | null
+    github_url?: string | null
+    x_url?: string | null
   }
 }
 
@@ -97,7 +99,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
           *,
           profiles:user_id (
             full_name,
-            avatar_url
+            avatar_url,
+            github_url,
+            x_url
           )
         `)
         .eq('id', resolvedParams.id)
@@ -415,22 +419,27 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     return null
   }
 
-  const xValue = project.x_account?.trim() || ''
-  const githubValue = project.github_account?.trim() || ''
+  const xValue = project.x_account?.trim() || project.profiles?.x_url?.trim() || ''
+  const githubValue = project.github_account?.trim() || project.profiles?.github_url?.trim() || ''
 
-  const xHandle = xValue.replace(/^@/, '')
-  const xHref = xValue
-    ? /^https?:\/\//i.test(xValue)
-      ? xValue
-      : `https://x.com/${xHandle}`
-    : ''
+  const normalizeSocialLink = (value: string, baseUrl: 'https://x.com/' | 'https://github.com/') => {
+    if (!value) return { href: '', label: '' }
 
-  const githubHandle = githubValue.replace(/^@/, '')
-  const githubHref = githubValue
-    ? /^https?:\/\//i.test(githubValue)
-      ? githubValue
-      : `https://github.com/${githubHandle}`
-    : ''
+    if (/^https?:\/\//i.test(value)) {
+      const cleanedUrl = value.replace(/\/$/, '')
+      const label = cleanedUrl.split('/').filter(Boolean).pop() || cleanedUrl
+      return { href: cleanedUrl, label }
+    }
+
+    const cleanedHandle = value.replace(/^@/, '')
+    return {
+      href: `${baseUrl}${cleanedHandle}`,
+      label: cleanedHandle,
+    }
+  }
+
+  const xLink = normalizeSocialLink(xValue, 'https://x.com/')
+  const githubLink = normalizeSocialLink(githubValue, 'https://github.com/')
 
   return (
     <div className="min-h-screen bg-[#f6f6f6]">
@@ -489,26 +498,26 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
               <p className="text-sm font-medium text-gray-900">
                 掲載者：{project.profiles?.full_name || project.poster_name || '匿名'}
               </p>
-              {(xValue || githubValue) && (
+              {(xLink.href || githubLink.href) && (
                 <div className="mt-2 flex flex-wrap items-center gap-3 text-sm">
-                  {xValue && (
+                  {xLink.href && (
                     <a
-                      href={xHref}
+                      href={xLink.href}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-gray-600 hover:text-gray-900 underline underline-offset-2"
                     >
-                      X: {xValue.startsWith('http') ? xHandle : xValue}
+                      X: {xLink.label}
                     </a>
                   )}
-                  {githubValue && (
+                  {githubLink.href && (
                     <a
-                      href={githubHref}
+                      href={githubLink.href}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-gray-600 hover:text-gray-900 underline underline-offset-2"
                     >
-                      GitHub: {githubValue.startsWith('http') ? githubHandle : githubValue}
+                      GitHub: {githubLink.label}
                     </a>
                   )}
                 </div>
