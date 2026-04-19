@@ -247,6 +247,9 @@ export default function NewProjectPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (step !== 3) {
+      return
+    }
     setError(null)
     setLoading(true)
 
@@ -387,7 +390,11 @@ export default function NewProjectPage() {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} onKeyDown={(e) => {
+          if (e.key === 'Enter' && e.ctrlKey === false && e.metaKey === false && step !== 3) {
+            e.preventDefault()
+          }
+        }} className="space-y-5">
           {error && (
             <div className="bg-red-50/80 border border-red-200/60 text-red-600 px-4 py-3 rounded-2xl text-sm backdrop-blur-sm">
               {error}
