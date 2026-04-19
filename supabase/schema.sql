@@ -104,10 +104,17 @@ CREATE POLICY "Projects are viewable by everyone"
     ON projects FOR SELECT
     USING (true);
 
-DROP POLICY IF EXISTS "Users can create their own projects" ON projects;
-CREATE POLICY "Users can create their own projects"
+DROP POLICY IF EXISTS "Authenticated users can create projects" ON projects;
+CREATE POLICY "Authenticated users can create projects"
     ON projects FOR INSERT
-    WITH CHECK (auth.uid() = user_id OR user_id IS NULL);
+    TO authenticated
+    WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Anonymous users can create projects" ON projects;
+CREATE POLICY "Anonymous users can create projects"
+    ON projects FOR INSERT
+    TO anon
+    WITH CHECK (user_id IS NULL);
 
 DROP POLICY IF EXISTS "Users can update their own projects" ON projects;
 CREATE POLICY "Users can update their own projects"
