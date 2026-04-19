@@ -1,0 +1,3 @@
+ALTER TABLE projects
+ADD COLUMN IF NOT EXISTS x_account TEXT,
+ADD COLUMN IF NOT EXISTS github_account TEXT;

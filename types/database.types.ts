@@ -57,6 +57,9 @@ export interface Database {
         Row: {
           id: string
           user_id: string | null
+          poster_name: string | null
+          x_account: string | null
+          github_account: string | null
           title: string
           description: string
           url: string
@@ -73,6 +76,9 @@ export interface Database {
         Insert: {
           id?: string
           user_id?: string | null
+          poster_name?: string | null
+          x_account?: string | null
+          github_account?: string | null
           title: string
           description: string
           url: string
@@ -89,6 +95,9 @@ export interface Database {
         Update: {
           id?: string
           user_id?: string | null
+          poster_name?: string | null
+          x_account?: string | null
+          github_account?: string | null
           title?: string
           description?: string
           url?: string

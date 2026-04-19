@@ -17,6 +17,8 @@ interface Project {
   id: string
   user_id: string | null
   poster_name?: string | null
+  x_account?: string | null
+  github_account?: string | null
   title: string
   description: string
   url: string
@@ -413,6 +415,23 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     return null
   }
 
+  const xValue = project.x_account?.trim() || ''
+  const githubValue = project.github_account?.trim() || ''
+
+  const xHandle = xValue.replace(/^@/, '')
+  const xHref = xValue
+    ? /^https?:\/\//i.test(xValue)
+      ? xValue
+      : `https://x.com/${xHandle}`
+    : ''
+
+  const githubHandle = githubValue.replace(/^@/, '')
+  const githubHref = githubValue
+    ? /^https?:\/\//i.test(githubValue)
+      ? githubValue
+      : `https://github.com/${githubHandle}`
+    : ''
+
   return (
     <div className="min-h-screen bg-[#f6f6f6]">
       <Navbar />
@@ -470,6 +489,30 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
               <p className="text-sm font-medium text-gray-900">
                 掲載者：{project.profiles?.full_name || project.poster_name || '匿名'}
               </p>
+              {(xValue || githubValue) && (
+                <div className="mt-2 flex flex-wrap items-center gap-3 text-sm">
+                  {xValue && (
+                    <a
+                      href={xHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-600 hover:text-gray-900 underline underline-offset-2"
+                    >
+                      X: {xValue.startsWith('http') ? xHandle : xValue}
+                    </a>
+                  )}
+                  {githubValue && (
+                    <a
+                      href={githubHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-600 hover:text-gray-900 underline underline-offset-2"
+                    >
+                      GitHub: {githubValue.startsWith('http') ? githubHandle : githubValue}
+                    </a>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* 日付情報 */}

@@ -22,6 +22,9 @@ const TAG_LIMIT_ERROR = `タグは最大${MAX_TAG_SELECTION}つまで選択で�
 interface Project {
   id: string
   user_id: string | null
+  poster_name: string | null
+  x_account: string | null
+  github_account: string | null
   title: string
   description: string
   url: string
@@ -39,6 +42,9 @@ export default function ProjectEditPage({ params }: { params: Promise<{ id: stri
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [url, setUrl] = useState('')
+  const [posterName, setPosterName] = useState('')
+  const [xAccount, setXAccount] = useState('')
+  const [githubAccount, setGithubAccount] = useState('')
   const [categories, setCategories] = useState<string[]>([])
   const [tags, setTags] = useState<string[]>([])
   const [aiTools, setAiTools] = useState<string[]>([])
@@ -80,7 +86,7 @@ export default function ProjectEditPage({ params }: { params: Promise<{ id: stri
 
       const { data: projectData, error } = await supabase
         .from('projects')
-        .select('id, user_id, title, description, url, image_url, categories, tags, ai_tools, backend_services, frontend_tools')
+        .select('id, user_id, poster_name, x_account, github_account, title, description, url, image_url, categories, tags, ai_tools, backend_services, frontend_tools')
         .eq('id', resolvedParams.id)
         .single()
 
@@ -99,6 +105,9 @@ export default function ProjectEditPage({ params }: { params: Promise<{ id: stri
       setTitle(projectData.title)
       setDescription(projectData.description)
       setUrl(projectData.url)
+      setPosterName(projectData.poster_name || '')
+      setXAccount(projectData.x_account || '')
+      setGithubAccount(projectData.github_account || '')
       setCategories(projectData.categories || [])
       setTags(projectData.tags || [])
       setAiTools(projectData.ai_tools || [])
@@ -275,6 +284,9 @@ export default function ProjectEditPage({ params }: { params: Promise<{ id: stri
       const { error: updateError } = await supabase
         .from('projects')
         .update({
+          poster_name: posterName.trim() || null,
+          x_account: xAccount.trim() || null,
+          github_account: githubAccount.trim() || null,
           title,
           description,
           url,
@@ -410,6 +422,51 @@ export default function ProjectEditPage({ params }: { params: Promise<{ id: stri
                   />
                 </div>
                 <p className="text-xs text-gray-400 mt-1">アプリのURLまたはリポジトリのURL</p>
+              </div>
+
+              <div>
+                <label htmlFor="posterName" className="block text-sm font-medium text-gray-700 mb-1">
+                  掲載者名 <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="posterName"
+                  required
+                  value={posterName}
+                  onChange={(e) => setPosterName(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors text-sm"
+                  placeholder="例: 山田 太郎"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="xAccount" className="block text-sm font-medium text-gray-700 mb-1">
+                    Xアカウント <span className="text-gray-400 text-xs">(任意)</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="xAccount"
+                    value={xAccount}
+                    onChange={(e) => setXAccount(e.target.value)}
+                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors text-sm"
+                    placeholder="例: @yourname または yourname"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="githubAccount" className="block text-sm font-medium text-gray-700 mb-1">
+                    GitHubアカウント <span className="text-gray-400 text-xs">(任意)</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="githubAccount"
+                    value={githubAccount}
+                    onChange={(e) => setGithubAccount(e.target.value)}
+                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors text-sm"
+                    placeholder="例: octocat"
+                  />
+                </div>
               </div>
             </div>
           </section>

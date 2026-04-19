@@ -19,6 +19,8 @@ export default function NewProjectPage() {
   const [description, setDescription] = useState('')
   const [url, setUrl] = useState('')
   const [posterName, setPosterName] = useState('')
+  const [xAccount, setXAccount] = useState('')
+  const [githubAccount, setGithubAccount] = useState('')
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [isDragActive, setIsDragActive] = useState(false)
@@ -268,6 +270,8 @@ export default function NewProjectPage() {
         .insert({
           ...baseProjectPayload,
           poster_name: posterName.trim(),
+          x_account: xAccount.trim() || null,
+          github_account: githubAccount.trim() || null,
         })
         .select()
         .single()
@@ -275,7 +279,7 @@ export default function NewProjectPage() {
       data = firstInsert.data as { id: string } | null
       insertError = firstInsert.error
 
-      if (insertError?.message?.includes("poster_name")) {
+      if (insertError?.message?.match(/poster_name|x_account|github_account/)) {
         const fallbackInsert = await supabase
           .from('projects')
           .insert(baseProjectPayload)
@@ -442,6 +446,36 @@ export default function NewProjectPage() {
                     className="w-full px-4 py-2.5 bg-slate-50/80 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 transition-all duration-200 text-sm placeholder:text-slate-300"
                     placeholder="例: 山田 太郎"
                   />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="xAccount" className="block text-sm font-medium text-slate-600 mb-1.5">
+                      Xアカウント <span className="text-slate-400 text-xs">(任意)</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="xAccount"
+                      value={xAccount}
+                      onChange={(e) => setXAccount(e.target.value)}
+                      className="w-full px-4 py-2.5 bg-slate-50/80 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 transition-all duration-200 text-sm placeholder:text-slate-300"
+                      placeholder="例: @yourname または yourname"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="githubAccount" className="block text-sm font-medium text-slate-600 mb-1.5">
+                      GitHubアカウント <span className="text-slate-400 text-xs">(任意)</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="githubAccount"
+                      value={githubAccount}
+                      onChange={(e) => setGithubAccount(e.target.value)}
+                      className="w-full px-4 py-2.5 bg-slate-50/80 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 transition-all duration-200 text-sm placeholder:text-slate-300"
+                      placeholder="例: octocat"
+                    />
+                  </div>
                 </div>
 
                 <div>
