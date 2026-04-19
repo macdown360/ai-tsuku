@@ -65,8 +65,11 @@ export default async function Home() {
       <section className="bg-white border-b border-gray-100">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-16 md:py-24 text-center">
           <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight tracking-tight whitespace-nowrap">
-            AIで作ったプロダクトを、気軽にシェアしよう
+            AIで作ったプロダクトやアプリを気軽にシェア
           </h1>
+          <div className="inline-block bg-gray-200 text-gray-700 text-xs px-3 py-1.5 rounded-md mb-4">
+            ログイン不要
+          </div>
           <p className="text-sm md:text-base text-gray-500 mb-8 leading-relaxed">
             AIやノーコードで作ったサイトやアプリを、簡単に公開・共有できるプラットフォーム
           </p>
