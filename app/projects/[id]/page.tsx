@@ -556,13 +556,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
             {/* 日付情報 */}
             <div className="mb-6 text-xs text-gray-500 space-y-1">
               <p>
-                <span className="font-medium text-gray-600">作成日:</span> {new Date(project.created_at).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })}
+                <span className="font-medium text-gray-600">掲載日:</span> {new Date(project.created_at).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })}
               </p>
-              {project.created_at !== project.updated_at && (
-                <p>
-                  <span className="font-medium text-gray-600">最終更新:</span> {new Date(project.updated_at).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })}
-                </p>
-              )}
             </div>
 
             {/* 説明 */}
@@ -669,74 +664,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                 url={typeof window !== 'undefined' ? window.location.href : ''}
                 imageUrl={project.image_url || undefined}
               />
-            </div>
-
-            {/* 改善履歴セクション */}
-            <div className="mt-6 pt-6 border-t border-gray-100">
-              <h2 className="text-base font-bold text-gray-900 mb-2">
-                改善履歴 ({updates.length})
-              </h2>
-              <p className="text-xs text-gray-400 mb-5">
-                改善履歴はプロジェクトの作成者のみが追加できます
-              </p>
-
-              {/* 改善履歴フォーム - プロジェクト所有者のみ表示 */}
-              {isOwner && (
-                <form onSubmit={handleUpdateSubmit} className="mb-6">
-                  <textarea
-                    value={newUpdate}
-                    onChange={(e) => setNewUpdate(e.target.value)}
-                    placeholder="改善内容を記入してください..."
-                    maxLength={50}
-                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none text-sm"
-                    rows={2}
-                    disabled={submittingUpdate}
-                  />
-                  <div className="mt-2 flex justify-end">
-                    <button
-                      type="submit"
-                      disabled={submittingUpdate || !newUpdate.trim()}
-                      className="px-5 py-1.5 bg-emerald-500 text-white rounded-full text-sm font-medium hover:bg-emerald-600 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
-                    >
-                      {submittingUpdate ? '追加中...' : '追加'}
-                    </button>
-                  </div>
-                </form>
-              )}
-
-              {/* 改善履歴リスト */}
-              <div className="space-y-3">
-                {updates.length === 0 ? (
-                  <p className="text-center text-gray-400 py-6 text-sm">
-                    まだ改善履歴がありません
-                  </p>
-                ) : (
-                  updates.map((update) => (
-                    <div key={update.id} className="bg-emerald-50 rounded-lg px-4 py-2.5 border border-emerald-200 flex items-start justify-between gap-3">
-                      <div className="flex flex-col gap-1 min-w-0 flex-1">
-                        <p className="text-xs text-emerald-700 font-medium">
-                          {new Date(update.created_at).toLocaleDateString('ja-JP', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric',
-                          })}
-                        </p>
-                        <p className="text-sm text-gray-700 break-words whitespace-normal">
-                          {update.content}
-                        </p>
-                      </div>
-                      {isOwner && (
-                        <button
-                          onClick={() => handleUpdateDelete(update.id)}
-                          className="text-gray-400 hover:text-red-500 text-xs transition-colors whitespace-nowrap"
-                        >
-                          削除
-                        </button>
-                      )}
-                    </div>
-                  ))
-                )}
-              </div>
             </div>
 
             {/* 関連プロジェクト */}
