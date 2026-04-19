@@ -10,7 +10,7 @@ export default async function Home() {
   const { data: { user } } = await supabase.auth.getUser()
   
   // ログイン状態に応じたリンク先を決定
-  const ctaLink = user ? '/projects/new' : '/auth/signup'
+  const ctaLink = '/projects/new'
   
   // 最新のプロジェクトを取得（8つに増やして4カラム×2行）
   const { data: recentProjects } = await supabase
