@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import ProjectCard from '@/components/ProjectCard'
+import CategorySidebar from '@/components/CategorySidebar'
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://tool-park.example.com'
 
@@ -78,37 +79,11 @@ export default async function ProjectsPage({
         <div className="flex flex-col lg:flex-row gap-6">
           {/* 左サイドバー - カテゴリメニュー */}
           <aside className="w-full lg:w-64 flex-shrink-0">
-            <div className="bg-white rounded-xl border border-gray-100 p-4 sticky top-20">
-              <h2 className="text-sm font-bold text-gray-900 mb-3">カテゴリ</h2>
-              <nav className="space-y-1">
-                <Link
-                  href={params.search ? `/projects?search=${encodeURIComponent(params.search)}` : '/projects'}
-                  className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
-                    !params.category
-                      ? 'bg-gray-900 text-white font-medium'
-                      : 'text-gray-700 hover:bg-gray-50'
-                  }`}
-                >
-                  すべて
-                </Link>
-                {categories.sort().map((cat) => (
-                  <Link
-                    key={cat}
-                    href={params.search 
-                      ? `/projects?category=${encodeURIComponent(cat)}&search=${encodeURIComponent(params.search)}`
-                      : `/projects?category=${encodeURIComponent(cat)}`
-                    }
-                    className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
-                      params.category === cat
-                        ? 'bg-gray-900 text-white font-medium'
-                        : 'text-gray-700 hover:bg-gray-50'
-                    }`}
-                  >
-                    {cat}
-                  </Link>
-                ))}
-              </nav>
-            </div>
+            <CategorySidebar
+              activeCategory={params.category}
+              search={params.search}
+              availableCategories={categories.sort()}
+            />
           </aside>
 
           {/* メインコンテンツ */}
