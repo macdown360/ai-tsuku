@@ -395,12 +395,6 @@ export default function NewProjectPage() {
             e.preventDefault()
           }
         }} className="space-y-5">
-          {error && (
-            <div className="bg-red-50/80 border border-red-200/60 text-red-600 px-4 py-3 rounded-2xl text-sm backdrop-blur-sm">
-              {error}
-            </div>
-          )}
-
           {step === 1 && (
             <section className="bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden">
               <div className="px-5 py-4 border-b border-slate-100">
@@ -690,6 +684,12 @@ export default function NewProjectPage() {
                 </div>
               </div>
             </section>
+          )}
+
+          {error && (
+            <div className="bg-red-50/80 border border-red-200/60 text-red-600 px-4 py-3 rounded-2xl text-sm backdrop-blur-sm">
+              {error}
+            </div>
           )}
 
           <div className="bg-white rounded-2xl shadow-sm border border-slate-200/60 p-5">
