@@ -130,6 +130,7 @@ export default function NewProjectPage() {
   const [tags, setTags] = useState<string[]>([])
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const submitIntentRef = useRef(false)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
@@ -224,6 +225,7 @@ export default function NewProjectPage() {
   }
 
   const handleNext = () => {
+    submitIntentRef.current = false
     if (step === 1) {
       if (!validateStep1()) return
       setStep(2)
@@ -241,15 +243,17 @@ export default function NewProjectPage() {
   }
 
   const handleBack = () => {
+    submitIntentRef.current = false
     setError(null)
     setStep((prev) => (prev === 1 ? 1 : ((prev - 1) as 1 | 2 | 3)))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (step !== 3) {
+    if (step !== 3 || !submitIntentRef.current) {
       return
     }
+    submitIntentRef.current = false
     setError(null)
     setLoading(true)
 
@@ -724,6 +728,9 @@ export default function NewProjectPage() {
                 ) : (
                   <button
                     type="submit"
+                    onClick={() => {
+                      submitIntentRef.current = true
+                    }}
                     disabled={loading}
                     className="flex-1 sm:flex-none px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-indigo-600 text-white rounded-full hover:from-indigo-600 hover:to-indigo-700 disabled:from-slate-200 disabled:to-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed transition-all duration-200 text-sm font-medium shadow-sm shadow-indigo-200 disabled:shadow-none"
                   >
