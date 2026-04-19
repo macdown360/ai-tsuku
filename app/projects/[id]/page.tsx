@@ -58,6 +58,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
   const [project, setProject] = useState<Project | null>(null)
   const [user, setUser] = useState<User | null>(null)
   const [isLiked, setIsLiked] = useState(false)
+  const [likePending, setLikePending] = useState(false)
   const [loading, setLoading] = useState(true)
   const [copied, setCopied] = useState(false)
   const [comments, setComments] = useState<Comment[]>([])
@@ -106,17 +107,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
       setProject(projectData)
 
-      // いいね状態を取得
-      if (user) {
-        const { data: likeData } = await supabase
-          .from('likes')
-          .select('id')
-          .eq('user_id', user.id)
-          .eq('project_id', resolvedParams.id)
-          .single()
-
-        setIsLiked(!!likeData)
-      }
+      // localStorageのいいね状態を確認
+      const liked = JSON.parse(localStorage.getItem('liked_projects') || '[]')
+      setIsLiked(liked.includes(resolvedParams.id))
 
       // コメントを取得
       const { data: commentsData } = await supabase
@@ -222,45 +215,39 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
   }, [resolvedParams, supabase, router])
 
   const handleLike = async () => {
-    if (!user) {
-      router.push('/auth/login')
-      return
-    }
+    if (!project || likePending) return
 
-    if (!project) return
+    const storageKey = 'liked_projects'
+    const liked: string[] = JSON.parse(localStorage.getItem(storageKey) || '[]')
+    const alreadyLiked = liked.includes(project.id)
 
+    setLikePending(true)
     try {
-      if (isLiked) {
-        // いいねを削除
-        await supabase
-          .from('likes')
-          .delete()
-          .eq('user_id', user.id)
-          .eq('project_id', project.id)
+      const response = await fetch('/api/likes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          project_id: project.id,
+          action: alreadyLiked ? 'unlike' : 'like',
+        }),
+      })
 
-        await supabase
-          .from('projects')
-          .update({ likes_count: Math.max(0, project.likes_count - 1) })
-          .eq('id', project.id)
+      if (!response.ok) throw new Error('Failed')
 
-        setProject({ ...project, likes_count: Math.max(0, project.likes_count - 1) })
+      const { likes_count } = await response.json()
+
+      if (alreadyLiked) {
+        localStorage.setItem(storageKey, JSON.stringify(liked.filter((id) => id !== project.id)))
         setIsLiked(false)
       } else {
-        // いいねを追加
-        await supabase
-          .from('likes')
-          .insert({ user_id: user.id, project_id: project.id })
-
-        await supabase
-          .from('projects')
-          .update({ likes_count: project.likes_count + 1 })
-          .eq('id', project.id)
-
-        setProject({ ...project, likes_count: project.likes_count + 1 })
+        localStorage.setItem(storageKey, JSON.stringify([...liked, project.id]))
         setIsLiked(true)
       }
+      setProject({ ...project, likes_count })
     } catch (error) {
       console.error('いいねの更新に失敗しました:', error)
+    } finally {
+      setLikePending(false)
     }
   }
 
@@ -663,7 +650,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
               
               <button
                 onClick={handleLike}
-                className={`px-5 py-2.5 rounded-full font-medium border transition-colors text-sm whitespace-nowrap ${
+                disabled={likePending}
+                className={`px-5 py-2.5 rounded-full font-medium border transition-colors text-sm whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed ${
                   isLiked
                     ? 'border-red-500 text-red-500'
                     : 'border-gray-200 text-gray-600 hover:border-red-200 hover:text-red-500'

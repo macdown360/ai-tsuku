@@ -350,7 +350,7 @@ export default function NewProjectPage() {
             戻る
           </Link>
           <h1 className="text-xl sm:text-2xl font-bold text-slate-800 mt-4 tracking-tight">
-            作品を公開する
+            プロダクトを掲載する
           </h1>
           <p className="text-slate-400 text-sm mt-1.5">
             ログインなしでも公開できます（画像アップロードはログイン時のみ）
@@ -369,13 +369,13 @@ export default function NewProjectPage() {
           <section className="bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden">
             <div className="px-5 py-4 border-b border-slate-100">
               <h2 className="text-sm font-semibold text-slate-800">基本情報</h2>
-              <p className="text-xs text-slate-400 mt-0.5">アプリの名前・説明・URLを入力してください</p>
+              <p className="text-xs text-slate-400 mt-0.5">プロダクトの名前・説明・URLを入力してください</p>
             </div>
             <div className="p-5 space-y-5">
               {/* タイトル */}
               <div>
                 <label htmlFor="title" className="block text-sm font-medium text-slate-600 mb-1.5">
-                  アプリ名 <span className="text-red-400">*</span>
+                  プロダクト名 <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="text"
@@ -385,7 +385,7 @@ export default function NewProjectPage() {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   className="w-full px-4 py-2.5 bg-slate-50/80 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 transition-all duration-200 text-sm placeholder:text-slate-300"
-                  placeholder="例: 便利なTodoアプリ"
+                  placeholder="例: 便利なTodoプロダクト"
                 />
                 <div className="flex justify-between mt-1.5">
                   <p className="text-xs text-slate-400">わかりやすい名前をつけましょう</p>
@@ -408,7 +408,7 @@ export default function NewProjectPage() {
                   onChange={(e) => setDescription(e.target.value)}
                   rows={4}
                   className="w-full px-4 py-2.5 bg-slate-50/80 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 transition-all duration-200 resize-y text-sm placeholder:text-slate-300"
-                  placeholder="どんなアプリですか？特徴や使い方を書いてみましょう"
+                  placeholder="どんなプロダクトですか？特徴や使い方を書いてみましょう"
                 />
                 <div className="flex justify-between mt-1.5">
                   <p className="text-xs text-slate-400">特徴、使い方、技術スタックなどを記載</p>
@@ -435,7 +435,7 @@ export default function NewProjectPage() {
                     placeholder="https://example.com"
                   />
                 </div>
-                <p className="text-xs text-slate-400 mt-1.5">アプリのURLまたはリポジトリのURL</p>
+                <p className="text-xs text-slate-400 mt-1.5">プロダクトのURLまたはリポジトリのURL</p>
               </div>
             </div>
           </section>
@@ -606,7 +606,7 @@ export default function NewProjectPage() {
           <section className="bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden">
             <div className="px-5 py-4 border-b border-slate-100">
               <h2 className="text-sm font-semibold text-slate-800">サムネイル画像</h2>
-              <p className="text-xs text-slate-400 mt-0.5">アプリを視覚的にアピールしましょう（任意）</p>
+              <p className="text-xs text-slate-400 mt-0.5">プロダクトを視覚的にアピールしましょう（任意）</p>
             </div>
             <div className="p-5">
               {imagePreview && (
@@ -671,7 +671,7 @@ export default function NewProjectPage() {
           <section className="bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden">
             <div className="px-5 py-4 border-b border-slate-100">
               <h2 className="text-sm font-semibold text-slate-800">カテゴリ <span className="text-red-400 text-xs">*</span></h2>
-              <p className="text-xs text-slate-400 mt-0.5">アプリの分類を選択してください（複数選択可）</p>
+              <p className="text-xs text-slate-400 mt-0.5">プロダクトの分類を選択してください（複数選択可）</p>
             </div>
             <div className="p-5">
               {/* 選択中のカテゴリバッジ */}
