@@ -15,6 +15,7 @@ import type { User } from '@supabase/supabase-js'
 interface Project {
   id: string
   user_id: string | null
+  poster_name?: string | null
   title: string
   description: string
   url: string
@@ -512,7 +513,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
             {/* 作成者情報 */}
             <div className="mb-6">
               <p className="text-sm font-medium text-gray-900">
-                掲載者：{project.profiles?.full_name || '匿名'}
+                掲載者：{project.profiles?.full_name || project.poster_name || '匿名'}
               </p>
             </div>
 

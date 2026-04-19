@@ -334,6 +334,7 @@ export default function NewProjectPage() {
         .from('projects')
         .insert({
           user_id: user?.id ?? null,
+          poster_name: posterName.trim(),
           title: title.trim(),
           description: description.trim(),
           url: url.trim(),

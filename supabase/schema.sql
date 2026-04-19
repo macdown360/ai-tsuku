@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS profiles (
 CREATE TABLE IF NOT EXISTS projects (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+    poster_name TEXT,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     url TEXT NOT NULL,
