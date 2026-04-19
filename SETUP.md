@@ -79,13 +79,19 @@
 2. 以下の情報をコピー:
    - **Project URL** → `NEXT_PUBLIC_SUPABASE_URL`
    - **anon/public key** → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - **service_role key** → `SUPABASE_SERVICE_ROLE_KEY`
 
 3. `.env.local` ファイルを編集:
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
 NEXT_PUBLIC_BASE_URL=https://your-domain.com
 ```
+
+> **SUPABASE_SERVICE_ROLE_KEY について（重要）**
+> 画像アップロードAPI（`/api/uploads/thumbnail`）で利用します。
+> クライアントに公開しないため、`NEXT_PUBLIC_` プレフィックスは付けないでください。
 
 > **NEXT_PUBLIC_BASE_URL について**  
 > ローカル開発環境: `http://localhost:3000`  

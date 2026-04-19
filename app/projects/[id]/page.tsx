@@ -534,22 +534,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
             )}
 
             {/* 作成者情報 */}
-            <div className="flex items-center gap-2.5 mb-6 w-fit">
-              {project.user_id && project.profiles?.avatar_url ? (
-                <Image
-                  src={project.profiles.avatar_url}
-                  alt={project.profiles.full_name || '匿名'}
-                  width={32}
-                  height={32}
-                  className="rounded-full flex-shrink-0"
-                />
-              ) : (
-                <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0 text-gray-400 text-sm">
-                  👤
-                </div>
-              )}
+            <div className="mb-6">
               <p className="text-sm font-medium text-gray-900">
-                {project.profiles?.full_name || '匿名'}
+                掲載者：{project.profiles?.full_name || '匿名'}
               </p>
             </div>
 
