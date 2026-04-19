@@ -391,7 +391,7 @@ export default function NewProjectPage() {
         </div>
 
         <form onSubmit={handleSubmit} onKeyDown={(e) => {
-          if (e.key === 'Enter' && e.ctrlKey === false && e.metaKey === false && step !== 3) {
+          if (e.key === 'Enter' && e.ctrlKey === false && e.metaKey === false) {
             e.preventDefault()
           }
         }} className="space-y-5">
