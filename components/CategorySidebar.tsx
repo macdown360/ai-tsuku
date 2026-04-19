@@ -36,14 +36,23 @@ export default function CategorySidebar({ activeCategory, search, availableCateg
     ]
   }, [uncategorizedOptions])
 
-  const [openGroups, setOpenGroups] = useState<Set<string>>(new Set(groups.map((group) => group.label)))
+  const [openGroups, setOpenGroups] = useState<Set<string>>(
+    () => new Set(groups.map((group) => group.label))
+  )
 
   useEffect(() => {
     setOpenGroups((prev) => {
-      if (prev.size > 0) {
-        return prev
+      if (prev.size === 0) {
+        return new Set(groups.map((group) => group.label))
       }
-      return new Set(groups.map((group) => group.label))
+
+      const next = new Set(prev)
+      for (const group of groups) {
+        if (!next.has(group.label)) {
+          next.add(group.label)
+        }
+      }
+      return next
     })
   }, [groups])
 
