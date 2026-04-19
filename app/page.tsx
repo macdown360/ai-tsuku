@@ -67,22 +67,22 @@ export default async function Home() {
           <div className="inline-block bg-gray-200 text-gray-700 text-xs px-3 py-1.5 rounded-md mb-2">
             ログイン不要
           </div>
-          <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight tracking-tight whitespace-nowrap">
+          <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight tracking-tight whitespace-normal break-words">
             AIで作ったプロダクトやアプリを気軽にシェア
           </h1>
-          <p className="text-sm md:text-base text-gray-500 mb-8 leading-relaxed">
+          <p className="text-sm md:text-base text-gray-500 mb-6 md:mb-8 leading-relaxed max-w-2xl mx-auto">
             AIやノーコードで作ったサイトやアプリを、簡単に公開・共有できるプラットフォーム
           </p>
-          <div className="flex justify-center gap-3">
+          <div className="flex flex-col sm:flex-row justify-center gap-3">
             <Link
               href={ctaLink}
-              className="px-6 py-2.5 bg-emerald-500 text-white rounded-full text-sm font-medium hover:bg-emerald-600 transition-colors"
+              className="w-full sm:w-auto px-6 py-2.5 bg-emerald-500 text-white rounded-full text-sm font-medium hover:bg-emerald-600 transition-colors"
             >
               掲載する
             </Link>
             <Link
               href="/projects"
-              className="px-6 py-2.5 bg-white text-gray-700 rounded-full text-sm font-medium border border-gray-300 hover:bg-gray-50 transition-colors"
+              className="w-full sm:w-auto px-6 py-2.5 bg-white text-gray-700 rounded-full text-sm font-medium border border-gray-300 hover:bg-gray-50 transition-colors"
             >
               プロダクトを探す
             </Link>
