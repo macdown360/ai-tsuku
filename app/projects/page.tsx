@@ -33,13 +33,7 @@ export default async function ProjectsPage({
   // プロジェクトを取得
   let query = supabase
     .from('projects')
-    .select(`
-      *,
-      profiles:user_id (
-        full_name,
-        avatar_url
-      )
-    `)
+    .select('*')
     .order('created_at', { ascending: false })
 
   // カテゴリフィルター

@@ -21,10 +21,6 @@ interface ProjectCardProps {
     likes_count: number
     created_at: string
     updated_at: string
-    profiles?: {
-      full_name: string | null
-      avatar_url: string | null
-    }
   }
 }
 
@@ -97,7 +93,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           {/* フッター */}
           <div className="flex items-center justify-between pt-2 mt-auto border-t border-slate-200/60 gap-2">
             <span className="text-xs text-slate-500 truncate">
-              掲載者: {project.profiles?.full_name || project.poster_name || '匿名'} ・
+              掲載者: {project.poster_name || '匿名'} ・
               <span suppressHydrationWarning className="ml-1">
                 {new Date(project.created_at).toLocaleDateString('ja-JP', { month: '2-digit', day: '2-digit' })}
               </span>

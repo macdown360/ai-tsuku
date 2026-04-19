@@ -17,9 +17,7 @@ interface Params {
 interface Project {
   title: string
   description: string
-  profiles?: Array<{
-    full_name: string | null
-  }>
+  poster_name: string | null
 }
 
 export default async function Image({ params }: { params: Promise<Params> }) {
@@ -29,7 +27,7 @@ export default async function Image({ params }: { params: Promise<Params> }) {
 
     const { data: project } = await supabase
       .from('projects')
-      .select('title, description, profiles:user_id(full_name)')
+      .select('title, description, poster_name')
       .eq('id', id)
       .single()
 
@@ -58,7 +56,7 @@ export default async function Image({ params }: { params: Promise<Params> }) {
     }
 
     const title = (project as Project).title
-    const author = ((project as Project).profiles as any)?.[0]?.full_name || 'AIで作ってみた件'
+    const author = (project as Project).poster_name || 'AIで作ってみた件'
     const description = (project as Project).description.substring(0, 120)
 
     return new ImageResponse(

@@ -206,21 +206,12 @@ export default function NewProjectPage() {
             .insert({
               id: user.id,
               email: user.email!,
-              full_name: posterName.trim(),
+              full_name: user.user_metadata?.full_name || null,
               avatar_url: user.user_metadata?.avatar_url || null,
             })
 
           if (profileError) {
             throw new Error('プロフィールの作成に失敗しました。もう一度お試しください。')
-          }
-        } else {
-          const { error: updateProfileError } = await supabase
-            .from('profiles')
-            .update({ full_name: posterName.trim() })
-            .eq('id', user.id)
-
-          if (updateProfileError) {
-            throw new Error('掲載者名の更新に失敗しました。')
           }
         }
       }

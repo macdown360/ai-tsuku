@@ -16,13 +16,7 @@ export default async function Home() {
   // 最新のプロジェクトを取得（8つに増やして4カラム×2行）
   const { data: recentProjects } = await supabase
     .from('projects')
-    .select(`
-      *,
-      profiles:user_id (
-        full_name,
-        avatar_url
-      )
-    `)
+    .select('*')
     .order('created_at', { ascending: false })
     .limit(8)
 
@@ -31,13 +25,7 @@ export default async function Home() {
     HOME_CATEGORY_NAMES.map(async (category) => {
       const { data: projects } = await supabase
         .from('projects')
-        .select(`
-          *,
-          profiles:user_id (
-            full_name,
-            avatar_url
-          )
-        `)
+        .select('*')
         .contains('categories', [category])
         .order('created_at', { ascending: false })
         .limit(4)

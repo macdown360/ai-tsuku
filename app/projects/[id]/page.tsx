@@ -31,12 +31,6 @@ interface Project {
   likes_count: number
   created_at: string
   updated_at: string
-  profiles?: {
-    full_name: string | null
-    avatar_url: string | null
-    github_url?: string | null
-    x_url?: string | null
-  }
 }
 
 interface Comment {
@@ -95,15 +89,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
       // プロジェクト情報を取得
       const { data: projectData, error } = await supabase
         .from('projects')
-        .select(`
-          *,
-          profiles:user_id (
-            full_name,
-            avatar_url,
-            github_url,
-            x_url
-          )
-        `)
+        .select('*')
         .eq('id', resolvedParams.id)
         .single()
 
@@ -150,13 +136,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
       // 関連プロジェクトを取得・計算
       const { data: allProjectsData } = await supabase
         .from('projects')
-        .select(`
-          *,
-          profiles:user_id (
-            full_name,
-            avatar_url
-          )
-        `)
+        .select('*')
         .neq('id', resolvedParams.id)
 
       if (allProjectsData && allProjectsData.length > 0) {
@@ -419,8 +399,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     return null
   }
 
-  const xValue = project.x_account?.trim() || project.profiles?.x_url?.trim() || ''
-  const githubValue = project.github_account?.trim() || project.profiles?.github_url?.trim() || ''
+  const xValue = project.x_account?.trim() || ''
+  const githubValue = project.github_account?.trim() || ''
 
   const normalizeSocialLink = (value: string, baseUrl: 'https://x.com/' | 'https://github.com/') => {
     if (!value) return { href: '', label: '' }
@@ -496,7 +476,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
             {/* 作成者情報 */}
             <div className="mb-6">
               <p className="text-sm font-medium text-gray-900">
-                掲載者：{project.profiles?.full_name || project.poster_name || '匿名'}
+                掲載者：{project.poster_name || '匿名'}
               </p>
               {(xLink.href || githubLink.href) && (
                 <div className="mt-2 flex flex-wrap items-center gap-3 text-sm">

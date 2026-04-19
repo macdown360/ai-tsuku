@@ -9,9 +9,7 @@ interface ProjectStructuredDataProps {
     url: string
     created_at: string
     likes_count: number
-    profiles?: {
-      full_name: string | null
-    }
+    poster_name?: string | null
   }
   pageUrl: string
 }
@@ -30,7 +28,7 @@ export default function ProjectStructuredData({ project, pageUrl }: ProjectStruc
     dateModified: project.created_at,
     author: {
       '@type': 'Person',
-      name: (project.profiles as any)?.full_name || 'AIで作ってみた件',
+      name: project.poster_name || 'AIで作ってみた件',
     },
     publisher: {
       '@type': 'Organization',

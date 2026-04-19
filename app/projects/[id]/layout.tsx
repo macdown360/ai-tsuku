@@ -20,9 +20,7 @@ export async function generateMetadata(
         categories,
         tags,
         ai_tools,
-        profiles:user_id (
-          full_name
-        )
+        poster_name
       `)
       .eq('id', id)
       .single();
@@ -39,7 +37,7 @@ export async function generateMetadata(
     const title = `${(project as any).title} | AIで作ってみた件`;
     const description = (project as any).description.substring(0, 160);
     const image = (project as any).image_url || `${baseUrl}/og-image.png`;
-    const authorName = ((project as any).profiles && Array.isArray((project as any).profiles) && (project as any).profiles[0]?.full_name) || 'AIで作ってみた件';
+    const authorName = (project as any).poster_name || 'AIで作ってみた件';
     
     // キーワード生成：カテゴリ、タグ、AIツールから自動生成
     const keywords = [
