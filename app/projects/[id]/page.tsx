@@ -172,30 +172,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
             score += commonTags.length * 2
           }
 
-          // AIツールが共通していればスコア加算
-          if (projectData.ai_tools && p.ai_tools) {
-            const commonAiTools = (projectData.ai_tools || []).filter((tool: string) =>
-              (p.ai_tools || []).includes(tool)
-            )
-            score += commonAiTools.length * 2
-          }
-
-          // バックエンドサービスが共通していればスコア加算
-          if (projectData.backend_services && p.backend_services) {
-            const commonBackend = (projectData.backend_services || []).filter((service: string) =>
-              (p.backend_services || []).includes(service)
-            )
-            score += commonBackend.length * 2
-          }
-
-          // フロントエンドツールが共通していればスコア加算
-          if (projectData.frontend_tools && p.frontend_tools) {
-            const commonFrontend = (projectData.frontend_tools || []).filter((tool: string) =>
-              (p.frontend_tools || []).includes(tool)
-            )
-            score += commonFrontend.length * 2
-          }
-
           return { ...p, relatedScore: score }
         })
 
@@ -565,57 +541,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                     #{tag}
                   </span>
                 ))}
-              </div>
-            )}
-
-            {/* 使用したAIツール */}
-            {project.ai_tools && project.ai_tools.length > 0 && (
-              <div className="mb-6">
-                <p className="text-xs font-medium text-gray-600 mb-2">💡 使用したAIツール</p>
-                <div className="flex flex-wrap gap-2">
-                  {project.ai_tools.map((tool, index) => (
-                    <span
-                      key={index}
-                      className="inline-flex items-center gap-1 px-3 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-full"
-                    >
-                      {tool}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* 使用したバックエンド/サービス */}
-            {project.backend_services && project.backend_services.length > 0 && (
-              <div className="mb-6">
-                <p className="text-xs font-medium text-gray-600 mb-2">⚙️ バックエンド/サービス</p>
-                <div className="flex flex-wrap gap-2">
-                  {project.backend_services.map((service, index) => (
-                    <span
-                      key={index}
-                      className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full"
-                    >
-                      {service}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* 使用したフロントエンドツール */}
-            {project.frontend_tools && project.frontend_tools.length > 0 && (
-              <div className="mb-6">
-                <p className="text-xs font-medium text-gray-600 mb-2">🎨 フロントエンドツール</p>
-                <div className="flex flex-wrap gap-2">
-                  {project.frontend_tools.map((tool, index) => (
-                    <span
-                      key={index}
-                      className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full"
-                    >
-                      {tool}
-                    </span>
-                  ))}
-                </div>
               </div>
             )}
 
