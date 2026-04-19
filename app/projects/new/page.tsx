@@ -459,7 +459,7 @@ export default function NewProjectPage() {
                       value={xAccount}
                       onChange={(e) => setXAccount(e.target.value)}
                       className="w-full px-4 py-2.5 bg-slate-50/80 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 transition-all duration-200 text-sm placeholder:text-slate-300"
-                      placeholder="例: @yourname または yourname"
+                      placeholder="例: https://x.com/yourname"
                     />
                   </div>
 
@@ -473,7 +473,7 @@ export default function NewProjectPage() {
                       value={githubAccount}
                       onChange={(e) => setGithubAccount(e.target.value)}
                       className="w-full px-4 py-2.5 bg-slate-50/80 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 transition-all duration-200 text-sm placeholder:text-slate-300"
-                      placeholder="例: octocat"
+                      placeholder="例: https://github.com/octocat"
                     />
                   </div>
                 </div>

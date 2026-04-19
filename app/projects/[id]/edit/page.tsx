@@ -450,7 +450,7 @@ export default function ProjectEditPage({ params }: { params: Promise<{ id: stri
                     value={xAccount}
                     onChange={(e) => setXAccount(e.target.value)}
                     className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors text-sm"
-                    placeholder="例: @yourname または yourname"
+                    placeholder="例: https://x.com/yourname"
                   />
                 </div>
 
@@ -464,7 +464,7 @@ export default function ProjectEditPage({ params }: { params: Promise<{ id: stri
                     value={githubAccount}
                     onChange={(e) => setGithubAccount(e.target.value)}
                     className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors text-sm"
-                    placeholder="例: octocat"
+                    placeholder="例: https://github.com/octocat"
                   />
                 </div>
               </div>
