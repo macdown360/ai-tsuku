@@ -153,37 +153,24 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           {/* フッター：作成者といいね数 */}
           <div className="flex items-center justify-between pt-3 mt-auto border-t border-slate-200/60">
             <div className="flex items-center space-x-2 min-w-0 flex-1">
-              {project.user_id ? (
-                <Link
-                  href={`/profile/${project.user_id}`}
-                  className="flex items-center space-x-1.5 hover:opacity-70 transition-opacity min-w-0"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {project.profiles?.avatar_url ? (
-                    <Image
-                      src={project.profiles.avatar_url}
-                      alt={project.profiles.full_name || '匿名'}
-                      width={20}
-                      height={20}
-                      className="rounded-full flex-shrink-0"
-                    />
-                  ) : (
-                    <div className="w-5 h-5 rounded-full bg-slate-200 flex items-center justify-center text-[10px] flex-shrink-0 text-slate-400">
-                      👤
-                    </div>
-                  )}
-                  <span className="text-xs text-slate-600 truncate">
-                    {project.profiles?.full_name || '匿名'}
-                  </span>
-                </Link>
-              ) : (
-                <div className="flex items-center space-x-1.5 min-w-0">
+              <div className="flex items-center space-x-1.5 min-w-0">
+                {project.user_id && project.profiles?.avatar_url ? (
+                  <Image
+                    src={project.profiles.avatar_url}
+                    alt={project.profiles.full_name || '匿名'}
+                    width={20}
+                    height={20}
+                    className="rounded-full flex-shrink-0"
+                  />
+                ) : (
                   <div className="w-5 h-5 rounded-full bg-slate-200 flex items-center justify-center text-[10px] flex-shrink-0 text-slate-400">
                     👤
                   </div>
-                  <span className="text-xs text-slate-600 truncate">匿名</span>
-                </div>
-              )}
+                )}
+                <span className="text-xs text-slate-600 truncate">
+                  {project.profiles?.full_name || '匿名'}
+                </span>
+              </div>
             </div>
             <div className="flex items-center space-x-3 flex-shrink-0 ml-2">
               <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-rose-50 text-rose-600">

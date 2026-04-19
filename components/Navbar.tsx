@@ -95,12 +95,6 @@ export default function Navbar() {
                 >
                   掲載する
                 </Link>
-                <Link
-                  href="/profile"
-                  className="px-3 py-1.5 rounded-full text-sm text-gray-500 hover:text-gray-900 transition-colors"
-                >
-                  マイページ
-                </Link>
                 <button
                   onClick={handleSignOut}
                   className="px-3 py-1.5 rounded-full text-sm text-gray-500 hover:text-gray-900 transition-colors"
@@ -174,13 +168,6 @@ export default function Navbar() {
                     onClick={() => setIsOpen(false)}
                   >
                     掲載する
-                  </Link>
-                  <Link
-                    href="/profile"
-                    className="block px-3 py-2 rounded-md text-sm text-gray-500"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    マイページ
                   </Link>
                   <button
                     onClick={() => { handleSignOut(); setIsOpen(false) }}
