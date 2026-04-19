@@ -63,7 +63,7 @@ export default async function Home() {
       
       {/* Hero Section - noteのようにシンプル */}
       <section className="bg-white border-b border-gray-100">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-16 md:py-24 text-center">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 md:py-16 text-center">
           <div className="inline-block bg-gray-200 text-gray-700 text-xs px-3 py-1.5 rounded-md mb-2">
             ログイン不要
           </div>
