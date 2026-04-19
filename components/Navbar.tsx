@@ -29,10 +29,6 @@ export default function Navbar() {
     return () => subscription.unsubscribe()
   }, [supabase.auth])
 
-  useEffect(() => {
-    setSearchQuery(searchParams.get('search') || '')
-  }, [searchParams])
-
   const handleSignOut = async () => {
     await supabase.auth.signOut()
   }
@@ -97,7 +93,7 @@ export default function Navbar() {
                   href="/projects/new"
                   className="px-4 py-1.5 rounded-full bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600 transition-colors"
                 >
-                  公開
+                  掲載する
                 </Link>
                 <Link
                   href="/profile"
@@ -115,16 +111,10 @@ export default function Navbar() {
             ) : (
               <>
                 <Link
-                  href="/auth/login"
-                  className="px-3 py-1.5 rounded-full text-sm text-gray-500 hover:text-gray-900 transition-colors"
-                >
-                  ログイン
-                </Link>
-                <Link
-                  href="/auth/signup"
+                  href="/projects/new"
                   className="px-4 py-1.5 rounded-full bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600 transition-colors"
                 >
-                  新規登録
+                  掲載する
                 </Link>
               </>
             )}
@@ -183,7 +173,7 @@ export default function Navbar() {
                     className="block px-3 py-2 rounded-md text-sm font-medium text-emerald-600"
                     onClick={() => setIsOpen(false)}
                   >
-                    公開
+                    掲載する
                   </Link>
                   <Link
                     href="/profile"
@@ -202,18 +192,11 @@ export default function Navbar() {
               ) : (
                 <>
                   <Link
-                    href="/auth/login"
-                    className="block px-3 py-2 rounded-md text-sm text-gray-500"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    ログイン
-                  </Link>
-                  <Link
-                    href="/auth/signup"
+                    href="/projects/new"
                     className="block px-3 py-2 rounded-md text-sm font-medium text-emerald-600"
                     onClick={() => setIsOpen(false)}
                   >
-                    新規登録
+                    掲載する
                   </Link>
                 </>
               )}

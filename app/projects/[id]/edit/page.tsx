@@ -125,7 +125,7 @@ const TITLE_MAX = 80
 const DESC_MAX = 2000
 interface Project {
   id: string
-  user_id: string
+  user_id: string | null
   title: string
   description: string
   url: string

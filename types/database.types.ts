@@ -56,7 +56,7 @@ export interface Database {
       projects: {
         Row: {
           id: string
-          user_id: string
+          user_id: string | null
           title: string
           description: string
           url: string
@@ -72,7 +72,7 @@ export interface Database {
         }
         Insert: {
           id?: string
-          user_id: string
+          user_id?: string | null
           title: string
           description: string
           url: string
@@ -88,7 +88,7 @@ export interface Database {
         }
         Update: {
           id?: string
-          user_id?: string
+          user_id?: string | null
           title?: string
           description?: string
           url?: string

@@ -236,38 +236,40 @@ export default function NewProjectPage() {
 
       const { data: { user } } = await supabase.auth.getUser()
 
-      if (!user) {
-        throw new Error('ログインが必要です')
-      }
-
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('id', user.id)
-        .single()
-
-      if (!profile) {
-        const { error: profileError } = await supabase
+      if (user) {
+        const { data: profile } = await supabase
           .from('profiles')
-          .insert({
-            id: user.id,
-            email: user.email!,
-            full_name: user.user_metadata?.full_name || null,
-            avatar_url: user.user_metadata?.avatar_url || null,
-          })
+          .select('id')
+          .eq('id', user.id)
+          .single()
 
-        if (profileError) {
-          console.error('Profile creation error:', profileError)
-          throw new Error('プロフィールの作成に失敗しました。もう一度お試しください。')
+        if (!profile) {
+          const { error: profileError } = await supabase
+            .from('profiles')
+            .insert({
+              id: user.id,
+              email: user.email!,
+              full_name: user.user_metadata?.full_name || null,
+              avatar_url: user.user_metadata?.avatar_url || null,
+            })
+
+          if (profileError) {
+            console.error('Profile creation error:', profileError)
+            throw new Error('プロフィールの作成に失敗しました。もう一度お試しください。')
+          }
         }
       }
 
       let uploadedImageUrl: string | null = null
 
       if (imageFile) {
+        if (!user) {
+          throw new Error('画像付きで公開する場合はログインが必要です。画像なしならそのまま公開できます。')
+        }
+
         try {
           const fileExt = imageFile.name.split('.').pop()
-          const fileName = `${user.id}-${Date.now()}.${fileExt}`
+          const fileName = `${user?.id || 'anon'}-${Date.now()}.${fileExt}`
           const filePath = `projects/${fileName}`
 
           const { error: uploadError } = await supabase.storage
@@ -311,7 +313,7 @@ export default function NewProjectPage() {
       const { data, error } = await supabase
         .from('projects')
         .insert({
-          user_id: user.id,
+          user_id: user?.id ?? null,
           title,
           description,
           url,
@@ -351,7 +353,7 @@ export default function NewProjectPage() {
             作品を公開する
           </h1>
           <p className="text-slate-400 text-sm mt-1.5">
-            あなたの作品をみんなと共有しましょう
+            ログインなしでも公開できます（画像アップロードはログイン時のみ）
           </p>
         </div>
 
