@@ -88,7 +88,7 @@ export default function Navbar() {
               href="/projects"
               className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${
                 pathname.startsWith('/projects') && pathname !== '/projects/new'
-                  ? 'bg-white border-gray-900 text-gray-900'
+                  ? 'bg-white border-gray-900 text-gray-900 hover:bg-gray-100'
                   : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-100 hover:border-gray-400 hover:text-gray-900'
               }`}
             >
@@ -146,7 +146,7 @@ export default function Navbar() {
                 href="/projects"
                 className={`block px-3 py-2 rounded-full text-sm text-center font-medium border transition-colors ${
                   pathname.startsWith('/projects') && pathname !== '/projects/new'
-                    ? 'bg-white border-gray-900 text-gray-900'
+                    ? 'bg-white border-gray-900 text-gray-900 hover:bg-gray-100'
                     : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-100 hover:border-gray-400 hover:text-gray-900'
                 }`}
                 onClick={() => setIsOpen(false)}
