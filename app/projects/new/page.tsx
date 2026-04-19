@@ -330,25 +330,47 @@ export default function NewProjectPage() {
         uploadedImageUrl = uploadResult.publicUrl ?? null
       }
 
-      const { data, error: insertError } = await supabase
+      const baseProjectPayload = {
+        user_id: user?.id ?? null,
+        title: title.trim(),
+        description: description.trim(),
+        url: url.trim(),
+        image_url: uploadedImageUrl,
+        categories,
+        tags,
+        ai_tools: null,
+        backend_services: null,
+        frontend_tools: null,
+      }
+
+      let data: { id: string } | null = null
+      let insertError: any = null
+
+      // poster_name 未反映環境でも投稿失敗しないようにフォールバック
+      const firstInsert = await supabase
         .from('projects')
         .insert({
-          user_id: user?.id ?? null,
+          ...baseProjectPayload,
           poster_name: posterName.trim(),
-          title: title.trim(),
-          description: description.trim(),
-          url: url.trim(),
-          image_url: uploadedImageUrl,
-          categories,
-          tags,
-          ai_tools: null,
-          backend_services: null,
-          frontend_tools: null,
         })
         .select()
         .single()
 
-      if (insertError) throw insertError
+      data = firstInsert.data as { id: string } | null
+      insertError = firstInsert.error
+
+      if (insertError?.message?.includes("poster_name")) {
+        const fallbackInsert = await supabase
+          .from('projects')
+          .insert(baseProjectPayload)
+          .select()
+          .single()
+
+        data = fallbackInsert.data as { id: string } | null
+        insertError = fallbackInsert.error
+      }
+
+      if (insertError || !data) throw insertError || new Error('プロダクトの公開に失敗しました')
 
       router.push(`/projects/${data.id}`)
       router.refresh()

@@ -67,7 +67,7 @@ export default async function Home() {
           <div className="inline-block bg-gray-200 text-gray-700 text-xs px-3 py-1.5 rounded-md mb-2">
             ログイン不要
           </div>
-          <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight tracking-tight whitespace-normal break-words">
+          <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight tracking-tight whitespace-nowrap">
             AIで作ったプロダクトやアプリを気軽にシェア
           </h1>
           <p className="text-sm md:text-base text-gray-500 mb-6 md:mb-8 leading-relaxed max-w-2xl mx-auto">
