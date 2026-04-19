@@ -130,6 +130,8 @@ export default function NewProjectPage() {
   const [tags, setTags] = useState<string[]>([])
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [showShareModal, setShowShareModal] = useState(false)
+  const [publishedProjectId, setPublishedProjectId] = useState<string | null>(null)
   const submitIntentRef = useRef(false)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -371,14 +373,32 @@ export default function NewProjectPage() {
       }
 
       if (insertError || !data) throw insertError || new Error('プロダクトの公開に失敗しました')
-
-      router.push(`/projects/${data.id}`)
-      router.refresh()
+      setPublishedProjectId(data.id)
+      setShowShareModal(true)
     } catch (submitError: any) {
       setError(submitError.message || 'プロダクトの公開に失敗しました')
     } finally {
       setLoading(false)
     }
+  }
+
+  const navigateToPublishedProject = () => {
+    if (!publishedProjectId) return
+    setShowShareModal(false)
+    router.push(`/projects/${publishedProjectId}`)
+    router.refresh()
+  }
+
+  const handleShareOnXAfterPublish = () => {
+    if (!publishedProjectId) return
+
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || window.location.origin
+    const projectUrl = `${baseUrl}/projects/${publishedProjectId}`
+    const text = encodeURIComponent(`${title.trim()} を公開しました\n\n#AIツク #AIで作ってみた件`)
+    const xUrl = `https://x.com/intent/tweet?text=${text}&url=${encodeURIComponent(projectUrl)}`
+
+    window.open(xUrl, '_blank', 'width=550,height=420')
+    navigateToPublishedProject()
   }
 
   const stepTitles: Record<1 | 2 | 3, string> = {
@@ -765,6 +785,38 @@ export default function NewProjectPage() {
           </div>
         </form>
       </div>
+
+      {showShareModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4">
+          <div className="w-full max-w-md rounded-2xl bg-white border border-slate-200 shadow-xl p-6">
+            <h3 className="text-lg font-bold text-slate-900">公開が完了しました</h3>
+            <p className="mt-2 text-sm text-slate-600 leading-relaxed">
+              Xでシェアして、より多くの人に見てもらいませんか？
+            </p>
+
+            <div className="mt-5 grid grid-cols-1 gap-3">
+              <button
+                type="button"
+                onClick={handleShareOnXAfterPublish}
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-black text-white text-sm font-medium hover:bg-slate-800 transition-colors"
+              >
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+                Xでシェアする
+              </button>
+
+              <button
+                type="button"
+                onClick={navigateToPublishedProject}
+                className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 text-sm font-medium hover:bg-slate-50 transition-colors"
+              >
+                シェアせずに公開ページへ
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
