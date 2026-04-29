@@ -6,13 +6,8 @@ import { HOME_CATEGORY_NAMES } from '@/lib/categories'
 
 export default async function Home() {
   const supabase = await createClient()
-  
-  // ユーザーのログイン状態を確認
-  const { data: { user } } = await supabase.auth.getUser()
-  
-  // ログイン状態に応じたリンク先を決定
   const ctaLink = '/projects/new'
-  
+
   // 最新のプロジェクトを取得（8つに増やして4カラム×2行）
   const { data: recentProjects } = await supabase
     .from('projects')
