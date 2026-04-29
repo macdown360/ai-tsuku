@@ -15,7 +15,7 @@ interface ProjectStructuredDataProps {
 }
 
 export default function ProjectStructuredData({ project, pageUrl }: ProjectStructuredDataProps) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://tool-park.example.com'
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || ''
   
   const structuredData = {
     '@context': 'https://schema.org',

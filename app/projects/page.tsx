@@ -22,6 +22,13 @@ export const metadata: Metadata = {
   },
 }
 
+function sanitizeSearchParam(input: string): string {
+  // Remove characters that are PostgREST or() syntax delimiters to prevent injection
+  const stripped = input.replace(/[(),]/g, '')
+  // Escape PostgreSQL LIKE pattern special characters so they match literally
+  return stripped.replace(/\\/g, '\\\\').replace(/%/g, '\\%').replace(/_/g, '\\_')
+}
+
 export default async function ProjectsPage({
   searchParams,
 }: {
@@ -43,7 +50,8 @@ export default async function ProjectsPage({
 
   // 検索フィルター
   if (params.search) {
-    query = query.or(`title.ilike.%${params.search}%,description.ilike.%${params.search}%`)
+    const escaped = sanitizeSearchParam(params.search)
+    query = query.or(`title.ilike.%${escaped}%,description.ilike.%${escaped}%`)
   }
 
   const { data: projects } = await query

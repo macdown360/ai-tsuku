@@ -243,42 +243,22 @@ export default function ProjectEditPage({ params }: { params: Promise<{ id: stri
       }
 
       if (imageFile) {
-        const fileExt = imageFile.name.split('.').pop()
-        const fileName = `${user.id}-${Date.now()}.${fileExt}`
-        const filePath = `projects/${fileName}`
+        const formData = new FormData()
+        formData.append('file', imageFile)
+        formData.append('userId', user.id)
 
-        const { error: uploadError } = await supabase.storage
-          .from('project-images')
-          .upload(filePath, imageFile, { upsert: false })
+        const uploadResponse = await fetch('/api/uploads/thumbnail', {
+          method: 'POST',
+          body: formData,
+        })
 
-        if (uploadError) {
-          console.error('Upload error details:', uploadError)
+        const uploadResult = await uploadResponse.json()
 
-          if (uploadError.message === 'Bucket not found') {
-            throw new Error(
-              'Supabase Storage の設定がまだ完了していません。\n\n' +
-              'SETUP.md の「3. Supabase Storage のセットアップ」を参照して、\n' +
-              '「project-images」という名前のバケットを作成してください。'
-            )
-          }
-
-          if (uploadError.message.includes('row-level security policy')) {
-            throw new Error(
-              'Supabase Storage のセキュリティポリシーが正しく設定されていません。\n\n' +
-              'SETUP.md の「3. Supabase Storage のセットアップ」の\n' +
-              'ステップ2「RLS ポリシー設定」を確認して、\n' +
-              'CREATE ポリシーと SELECT ポリシーを作成してください。'
-            )
-          }
-
-          throw new Error(`画像アップロード失敗: ${uploadError.message || '不明なエラー'}`)
+        if (!uploadResponse.ok) {
+          throw new Error(uploadResult.error || '画像のアップロードに失敗しました')
         }
 
-        const { data: { publicUrl } } = supabase.storage
-          .from('project-images')
-          .getPublicUrl(filePath)
-
-        uploadedImageUrl = publicUrl
+        uploadedImageUrl = uploadResult.publicUrl ?? null
       }
 
       const { error: updateError } = await supabase

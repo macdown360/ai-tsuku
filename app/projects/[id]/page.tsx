@@ -133,18 +133,26 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
         setUpdates(updatesData)
       }
 
-      // 関連プロジェクトを取得・計算
-      const { data: allProjectsData } = await supabase
+      // 関連プロジェクトを取得・計算（カテゴリが重なるものだけに絞って全件取得を回避）
+      const categories = projectData.categories as string[] | null
+      let relatedQuery = supabase
         .from('projects')
         .select('*')
         .neq('id', resolvedParams.id)
+        .order('likes_count', { ascending: false })
+        .limit(24)
 
-      if (allProjectsData && allProjectsData.length > 0) {
+      if (categories && categories.length > 0) {
+        relatedQuery = relatedQuery.overlaps('categories', categories)
+      }
+
+      const { data: candidateProjects } = await relatedQuery
+
+      if (candidateProjects && candidateProjects.length > 0) {
         // 関連性スコアを計算
-        const scoredProjects = allProjectsData.map((p: Project) => {
+        const scoredProjects = candidateProjects.map((p: Project) => {
           let score = 0
 
-          // カテゴリが共通していればスコア加算
           if (projectData.categories && p.categories) {
             const commonCategories = projectData.categories.filter((cat: string) =>
               p.categories.includes(cat)
@@ -152,7 +160,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
             score += commonCategories.length * 3
           }
 
-          // タグが共通していればスコア加算
           if (projectData.tags && p.tags) {
             const commonTags = projectData.tags.filter((tag: string) =>
               p.tags.includes(tag)
@@ -163,7 +170,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
           return { ...p, relatedScore: score }
         })
 
-        // スコアでソートして上位4～6個を選択
         const filtered = scoredProjects
           .filter((p: any) => p.relatedScore > 0)
           .sort((a: any, b: any) => b.relatedScore - a.relatedScore)
@@ -241,14 +247,14 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
   const handleCopyUrl = async () => {
     if (!project) return
-    
+    const pageUrl = window.location.href
     try {
-      await navigator.clipboard.writeText(project.url)
+      await navigator.clipboard.writeText(pageUrl)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
       const textarea = document.createElement('textarea')
-      textarea.value = project.url
+      textarea.value = pageUrl
       document.body.appendChild(textarea)
       textarea.select()
       document.execCommand('copy')
@@ -426,9 +432,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
       <Navbar />
       {resolvedParams && project && (
         <>
-          <ProjectStructuredData 
+          <ProjectStructuredData
             project={project}
-            pageUrl={`${typeof window !== 'undefined' ? window.location.href : 'https://tool-park.example.com'}`}
+            pageUrl={`${typeof window !== 'undefined' ? window.location.href : `${process.env.NEXT_PUBLIC_BASE_URL || ''}/projects/${project.id}`}`}
           />
           <BreadcrumbSchema projectTitle={project.title} projectId={project.id} />
         </>
